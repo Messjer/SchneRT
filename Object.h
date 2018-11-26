@@ -49,7 +49,7 @@ namespace stage {
 
         double intersect(const Ray &ray) const override;
 
-        Vec3d normal(const Vec3d &poc) const override { return (poc - pos).norm(); }
+        Vec3d normal(const Vec3d &poc) const override { return (poc - pos).unit(); }
 
         bool touched(const Vec3d &poc) const override { return fabs((pos - poc).dot(pos - poc) - rad * rad) < EPS; }
 

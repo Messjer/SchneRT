@@ -7,7 +7,7 @@
 using namespace stage;
 using namespace std;
 
-Stage::Stage(): cam(Vec3d(50, 52, 295.6), Vec3d(0, -0.042612, -1), Vec3d(1), 140, .5135, 1024, 768) {
+Stage::Stage(): eye(Vec3d(50, 52, 295.6), Vec3d(0, -0.042612, -1), Vec3d(1), 140, .00064, 1024, 768) {
     objects.push_back(new Sphere(1e5, Vec3d(1e5 + 1, 40.8, 81.6), COLOR_BLACK, Vec3d(.75, .25, .25), Object::DIFF));//Left
     objects.push_back(new Sphere(1e5, Vec3d(-1e5 + 99, 40.8, 81.6), COLOR_BLACK, Vec3d(.25, .25, .75), Object::DIFF));//Rght
     objects.push_back(new Sphere(1e5, Vec3d(50, 40.8, 1e5), COLOR_BLACK, Vec3d(.75, .75, .75), Object::DIFF));//Back
@@ -51,7 +51,7 @@ Vec3d Stage::radiance(const Ray &ray, int depth) {
 
     if (++depth > 5) return hit -> emit;
 
-    // compute the shadow rays
+    /* compute the shadow rays */
 
     // specular reflection
 
@@ -59,32 +59,39 @@ Vec3d Stage::radiance(const Ray &ray, int depth) {
     Vec3d poc = ray.src + ray.dir * t;
     assert(hit -> touched(poc));
 
-    Vec3d normal = hit -> normal(poc);
-    Ray reflect = Ray(poc, (ray.dir - normal * 2 * normal.dot(ray.dir)).norm());
-    return hit -> emit + hit -> color * radiance(reflect, depth);
+    switch (hit -> refl) {
+        //Specular Reflection
+        case Object::SPEC:
+        case Object::REFR:
+        case Object::DIFF: {
+            Vec3d normal = hit->normal(poc);
+            Ray reflect = Ray(poc, (ray.dir - normal * 2 * normal.dot(ray.dir)).unit());
+            return hit->emit + hit->color * radiance(reflect, depth);
+        }
+    }
 }
 
 // path tracing core algorithm
 Canvas* Stage::RayTrace(int h1, int h2, int w1, int w2) {
-    assert(w2 > w1 && w1 >= 0 && w2 <= cam.w && h2 > h1 && h1 >=0 && h2 <= cam.h);
+    assert(w2 > w1 && w1 >= 0 && w2 <= eye.w && h2 > h1 && h1 >=0 && h2 <= eye.h);
     auto *rst = new Canvas(h2 - h1, w2 - w1);
 
     // loop over every pixel
     for (int y = h1; y < h2; y++) {  // rows
         for (int x = w1; x < w2; x++) {  // cols
             // cast a ray
-            double dx = x - cam.w * .5;
-            double dy = y - cam.h * .5;
-            Vec3d d = cam.dir * cam.dist + cam.right * dx + cam.up * dy;
-
-            auto ray = Ray(cam.src + d * cam.scale, d.norm());
+            auto ray = eye.getRay(x, y);
             auto light = radiance(ray, 0);
-            // printf("Computed %ld %ld %ld\n", lround(light.x), lround(light.y), lround(light.z));
             rst -> draw(y, x, light);
-            if (y == h1 && (x == w1 || x == w2 - 1))
-                cout <<ray <<endl;
         }
     }
 
     return rst;
+}
+
+Ray Camera::getRay(int x, int y) {
+    double dx = x - w * .5;
+    double dy = y - h * .5;
+    Vec3d d = dir + right * (dx * scale) + up * (dy * scale);
+    return {src + d * dist, d.unit()};
 }

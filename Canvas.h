@@ -14,6 +14,7 @@ private:
     void writePPMHead(FILE * file);
     bool inRange(int y, int x) { return y >= 0 && x >= 0 & y < h && x < w; }
     int coord(int y, int x) { assert(inRange(y, x) && "Not In range!"); return y * w + x; }
+    long int dTo255(double d) { d = (d < 0 ? 0 : (d > 1 ? 1 : d)); return int(pow(d, 1/2.2) * 255 + .5); }
 public:
     Canvas(int h, int w): w(w), h(h) {
         colors = new Vec3d[w * h];

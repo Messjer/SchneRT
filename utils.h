@@ -21,7 +21,7 @@ struct Vec3d {
     Vec3d operator-(const Vec3d &other) const { return {x-other.x,y-other.y,z-other.z}; }
     Vec3d operator*(double scale) const { return {x*scale,y*scale,z*scale}; }
     Vec3d operator*(const Vec3d &other) const { return {x*other.x,y*other.y,z*other.z}; }
-    Vec3d& norm(){ return *this = *this * (1/sqrt(x*x+y*y+z*z)); }
+    Vec3d& unit(){ return *this = *this * (1/sqrt(x*x+y*y+z*z)); }
     double dot(const Vec3d &other) const { return x*other.x+y*other.y+z*other.z; }
     // cross product
     Vec3d cross(Vec3d &other) const {return {y*other.z-z*other.y,z*other.x-x*other.z,x*other.y-y*other.x};}

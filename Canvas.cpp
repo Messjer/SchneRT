@@ -17,7 +17,7 @@ void Canvas::drawToFile(const std::string &file) {
     writePPMHead(out);
     for (int i = 0; i < w * h; i++) {
         auto &color = colors[i];
-        fprintf(out, " %ld %ld %ld", lround(color.x), lround(color.y), lround(color.z));
+        fprintf(out, " %ld %ld %ld", dTo255(color.x), dTo255(color.y), dTo255(color.z));
     }
     fclose(out);
 }
