@@ -18,7 +18,7 @@ double Sphere::intersect(const stage::Ray &ray) const {
     //cout <<delta <<endl;
 
     // no solution
-    if (delta < 0) return INF_D;
+    if (delta < EPS) return INF_D;
     else delta = sqrt(delta);
 
 

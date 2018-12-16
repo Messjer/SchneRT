@@ -9,11 +9,13 @@
 #include <vector>
 #include <iostream>
 #include <cstdio>
+#include <cstdlib>
 #include <cmath>
 #include <cstring>
 #include <list>
 #include <cassert>
 #include <tuple>
+#include <sstream>
 
 
 namespace stage {
@@ -38,10 +40,6 @@ struct Vec3d {
         out <<v.x <<" , " <<v.y << " , " <<v.z;
         return out;
     }
-};
-
-inline double randUnitInterval(unsigned short *Xi) {
-    return 2 * drand48() - 1;
 };
 
 #endif //SCHNERT_UTILS_H

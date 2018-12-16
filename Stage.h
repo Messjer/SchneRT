@@ -42,14 +42,14 @@ namespace stage {
         void setCamera(Camera cam) { this -> eye = cam; }
         void addObject(const Object &object) { objects.push_back(object.clone()); }
 
-        Canvas *RayTrace() { return RayTrace(0, eye.h, 0, eye.w); }
+        Canvas *RayTrace(int samp = 200, double resl = 1) { return RayTrace(0, eye.h, 0, eye.w, samp, resl); }
 
         /* Perform raytracing and output a Canvas
          * path tracing core algorithm
          * @Params: 0 <= w1 <= w2 <= eye.w
          * @Params: 0 <= h1 <= h2 <= eye.h
          * @Return: A *Canvas* of the output range, only specified rectangle areas is rendered */
-        Canvas *RayTrace(int h1, int h2, int w1, int w2, int samp = 200, double resl = 10);
+        Canvas *RayTrace(int h1, int h2, int w1, int w2, int samp, double resl);
 
     private:
         Camera eye;

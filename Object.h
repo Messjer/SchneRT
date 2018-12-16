@@ -35,6 +35,8 @@ namespace stage {
         virtual bool touched(const Vec3d &poc) const = 0;
 
         virtual Object *clone() const = 0;
+
+        virtual std::string toString() const = 0;
     };
 
     class Sphere : public Object {
@@ -54,6 +56,12 @@ namespace stage {
         bool touched(const Vec3d &poc) const override { return fabs((pos - poc).dot(pos - poc) - rad * rad) < EPS; }
 
         Sphere *clone() const override { return new Sphere(rad, pos, emit, color, refl); };
+
+        std::string toString() const override {
+            std::stringstream ss;
+            ss <<"pos: " <<pos <<std::endl <<rad;
+            return ss.str();
+        };
     };
 }
 

@@ -53,6 +53,9 @@ Vec3d Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
 
     // point of contact
     Vec3d poc = ray.src + ray.dir * t;
+    if (!hit -> touched(poc)) {
+        cout <<ray <<endl <<" does not touch " <<hit -> toString() <<endl;
+    }
     assert(hit -> touched(poc));
     Vec3d normal = hit -> normal(poc);
 
@@ -70,7 +73,7 @@ Vec3d Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
             Ray shadow = Ray(poc, randomHemisphere(normal, Xi));
             double cosTheta = shadow.dir.dot(normal);
             // reflectance
-            double BRDF = 0.1 / PI;
+            double BRDF = 3.0 / PI;
             return hit->emit + hit->color * cosTheta * BRDF * radiance(shadow, depth, Xi);
         }
     }
@@ -85,7 +88,7 @@ Vec3d Stage::randomHemisphere(const Vec3d &normal, unsigned short *Xi) {
     Vec3d yy = normal.cross(yy);
     // a formula for random direction
     // http://mathproofs.blogspot.com/2005/04/uniform-random-distribution-on-sphere.html
-    double theta0 = 2 * PI * erand48(Xi);
+    double theta0 = 3.5 * PI * erand48(Xi);
     double theta1 = acos(1 - 2 * erand48(Xi));
     return xx * sin(theta0) * sin(theta1) + yy * cos(theta0) * sin(theta1) + normal * cos(theta1);
 }
@@ -100,24 +103,26 @@ Canvas* Stage::RayTrace(int h1, int h2, int w1, int w2, int samp, double resl) {
     Vec3d light;
     bool done = false;
 #pragma omp parallel for schedule(dynamic, 1) private(light) shared(done)
-    for (int y = h1; y < h2; y++) {  // rows
+    for (int yi = 0; yi < newY; yi++) {  // rows
         // random state Xi
         unsigned short Xi[3]={0,0,0};
+        int y = h1 + yi * resl;
         Xi[2] = y * y * y;
         double pctg = 100.*(y - h1)/((h2 - h1)-1);
         if (pctg > 50 && !done) {
             rst->drawToFile("temp.ppm");
             done = true;
         }
-        fprintf(stderr,"\rRendering (%d spp) %5.2f%%",samp,100.*(y - h1)/((h2 - h1)-1));
-        for (int x = w1; x < w2; x++) {  // cols
+        fprintf(stderr,"\rRendering (%d spp) %5.2f%%",samp,pctg);
+        for (int xi = 0; xi < newX; xi++) {  // cols
+            int x = w1 + xi * resl;
             light = COLOR_BLACK;
             for (int s  = 0; s < samp; s++) {
                 // cast a ray
                 auto ray = eye.getRay(x, y);
                 light = light + radiance(ray, 0, Xi) * (1. / samp);
             }
-            rst->addPaint(y - h1, x - w1, light * .25);
+            rst->addPaint(yi, xi, light * .25);
         }
     }
 
