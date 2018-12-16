@@ -22,6 +22,10 @@ public:
     ~Canvas() {
         delete colors;
     }
+    void addPaint(int y, int x, const Vec3d &color) {
+        Vec3d & prev = colors[coord(y, x)];
+        prev = prev + color;
+    }
     void draw(int y, int x, const Vec3d &color) {
         //std::cout <<coord(y, x);
         colors[coord(y, x)] = color;

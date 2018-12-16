@@ -39,7 +39,7 @@ pair<int, double> Stage::intersect(const Ray &ray) {
     return make_pair(id, rst);
 }
 
-Vec3d Stage::radiance(const Ray &ray, int depth) {
+Vec3d Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
     int id; double t;
     std::tie(id, t) = intersect(ray);
 
@@ -49,40 +49,75 @@ Vec3d Stage::radiance(const Ray &ray, int depth) {
     // cout <<"hit " <<id <<endl;
     const Object * hit = objects[id];
 
-    if (++depth > 5) return hit -> emit;
-
-    /* compute the shadow rays */
-
-    // specular reflection
+    if (++depth > 3) return hit -> emit;
 
     // point of contact
     Vec3d poc = ray.src + ray.dir * t;
     assert(hit -> touched(poc));
+    Vec3d normal = hit -> normal(poc);
 
+    /* compute the shadow rays */
+
+    // specular reflection
     switch (hit -> refl) {
-        //Specular Reflection
-        case Object::SPEC:
+        // Specular Reflection
         case Object::REFR:
-        case Object::DIFF: {
-            Vec3d normal = hit->normal(poc);
+        case Object::SPEC: {
             Ray reflect = Ray(poc, (ray.dir - normal * 2 * normal.dot(ray.dir)).unit());
-            return hit->emit + hit->color * radiance(reflect, depth);
+            return hit->emit + hit->color * radiance(reflect, depth, Xi);
+        }
+        case Object::DIFF: {
+            Ray shadow = Ray(poc, randomHemisphere(normal, Xi));
+            double cosTheta = shadow.dir.dot(normal);
+            // reflectance
+            double BRDF = 0.1 / PI;
+            return hit->emit + hit->color * cosTheta * BRDF * radiance(shadow, depth, Xi);
         }
     }
 }
 
+Vec3d Stage::randomHemisphere(const Vec3d &normal, unsigned short *Xi) {
+    Vec3d xx;
+    if (fabs(normal.x) > stage::EPS)
+        xx = Vec3d(normal.y, -normal.x, 0).unit();
+    else
+        xx = Vec3d(0, -normal.z, normal.y).unit();
+    Vec3d yy = normal.cross(yy);
+    // a formula for random direction
+    // http://mathproofs.blogspot.com/2005/04/uniform-random-distribution-on-sphere.html
+    double theta0 = 2 * PI * erand48(Xi);
+    double theta1 = acos(1 - 2 * erand48(Xi));
+    return xx * sin(theta0) * sin(theta1) + yy * cos(theta0) * sin(theta1) + normal * cos(theta1);
+}
+
 // path tracing core algorithm
-Canvas* Stage::RayTrace(int h1, int h2, int w1, int w2) {
+Canvas* Stage::RayTrace(int h1, int h2, int w1, int w2, int samp, double resl) {
     assert(w2 > w1 && w1 >= 0 && w2 <= eye.w && h2 > h1 && h1 >=0 && h2 <= eye.h);
-    auto *rst = new Canvas(h2 - h1, w2 - w1);
+    int newY = (h2 - h1)/resl, newX = (w2 - w1)/resl;
+    auto *rst = new Canvas((h2 - h1)/resl, (w2 - w1)/resl);
 
     // loop over every pixel
+    Vec3d light;
+    bool done = false;
+#pragma omp parallel for schedule(dynamic, 1) private(light) shared(done)
     for (int y = h1; y < h2; y++) {  // rows
+        // random state Xi
+        unsigned short Xi[3]={0,0,0};
+        Xi[2] = y * y * y;
+        double pctg = 100.*(y - h1)/((h2 - h1)-1);
+        if (pctg > 50 && !done) {
+            rst->drawToFile("temp.ppm");
+            done = true;
+        }
+        fprintf(stderr,"\rRendering (%d spp) %5.2f%%",samp,100.*(y - h1)/((h2 - h1)-1));
         for (int x = w1; x < w2; x++) {  // cols
-            // cast a ray
-            auto ray = eye.getRay(x, y);
-            auto light = radiance(ray, 0);
-            rst -> draw(y, x, light);
+            light = COLOR_BLACK;
+            for (int s  = 0; s < samp; s++) {
+                // cast a ray
+                auto ray = eye.getRay(x, y);
+                light = light + radiance(ray, 0, Xi) * (1. / samp);
+            }
+            rst->addPaint(y - h1, x - w1, light * .25);
         }
     }
 

@@ -13,6 +13,14 @@
 #include <cstring>
 #include <list>
 #include <cassert>
+#include <tuple>
+
+
+namespace stage {
+    static const double EPS = 1e-4;
+    static const double INF_D = 1e20;
+    static const double PI = acos(-1);
+}
 
 struct Vec3d {
     double x, y, z;
@@ -32,9 +40,8 @@ struct Vec3d {
     }
 };
 
-namespace stage {
-    const double EPS = 1e-4;
-    const double INF_D = 1e20;
-}
+inline double randUnitInterval(unsigned short *Xi) {
+    return 2 * drand48() - 1;
+};
 
 #endif //SCHNERT_UTILS_H

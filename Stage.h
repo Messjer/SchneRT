@@ -8,6 +8,7 @@
 #include "Object.h"
 
 namespace stage {
+
     class Ray {
     public:
         Vec3d src, dir;
@@ -29,7 +30,7 @@ namespace stage {
         Camera(Vec3d s, Vec3d d, Vec3d r, double dist, double scale, int w, int h): Ray(s, d), dist(dist), w(w), h(h), right(
                 r.unit()), scale(scale) {
             up = dir.cross(right);
-            std::cout <<"Camera Ready!" <<std::endl <<"Located at " <<src <<std::endl << " Up = " <<up  <<std::endl << " Right = " <<right <<std::endl;
+            // std::cout <<"Camera Ready!" <<std::endl <<"Located at " <<src <<std::endl << " Up = " <<up  <<std::endl << " Right = " <<right <<std::endl;
         }
         Ray getRay(int x, int y);
     };
@@ -45,15 +46,16 @@ namespace stage {
 
         /* Perform raytracing and output a Canvas
          * path tracing core algorithm
-         * @Params: 0 <=w1 <= w2 <= eye.w
-         * @Params: 0 <=h1 <= h2 <= eye.h
+         * @Params: 0 <= w1 <= w2 <= eye.w
+         * @Params: 0 <= h1 <= h2 <= eye.h
          * @Return: A *Canvas* of the output range, only specified rectangle areas is rendered */
-        Canvas *RayTrace(int w1, int w2, int h1, int h2);
+        Canvas *RayTrace(int h1, int h2, int w1, int w2, int samp = 200, double resl = 10);
 
     private:
         Camera eye;
         std::vector<Object*> objects;
-        Vec3d radiance(const Ray &ray, int depth);
+        Vec3d radiance(const Ray &ray, int depth, unsigned short *Xi);
+        Vec3d randomHemisphere(const Vec3d &normal, unsigned short *Xi);
         std::pair<int,double> intersect(const Ray &ray);
     };
 
