@@ -17,7 +17,6 @@ Stage::Stage(): eye(Vec3d(50, 52, 295.6), Vec3d(0, -0.042612, -1), Vec3d(1), 140
     objects.push_back(new Sphere(16.5, Vec3d(27, 16.5, 47), COLOR_BLACK, Vec3d(1, 1, 1) * .999, Object::SPEC));//Mirr
     objects.push_back(new Sphere(16.5, Vec3d(73, 16.5, 78), COLOR_BLACK, Vec3d(1, 1, 1) * .999, Object::REFR));//Glas
     objects.push_back(new Sphere(600, Vec3d(50, 681.6 - .27, 81.6), Vec3d(12, 12, 12), COLOR_BLACK, Object::DIFF));//Lite
-
 }
 
 Stage::~Stage() {
@@ -53,11 +52,8 @@ Vec3d Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
 
     // point of contact
     Vec3d poc = ray.src + ray.dir * t;
-    if (!hit -> touched(poc)) {
-        cout <<ray <<endl <<" does not touch " <<hit -> toString() <<endl;
-    }
     assert(hit -> touched(poc));
-    Vec3d normal = hit -> normal(poc);
+    Vec3d normal = hit -> normal(Ray(poc, ray.dir));
 
     /* compute the shadow rays */
 
@@ -70,27 +66,25 @@ Vec3d Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
             return hit->emit + hit->color * radiance(reflect, depth, Xi);
         }
         case Object::DIFF: {
-            Ray shadow = Ray(poc, randomHemisphere(normal, Xi));
-            double cosTheta = shadow.dir.dot(normal);
-            // reflectance
-            double BRDF = 3.0 / PI;
-            return hit->emit + hit->color * cosTheta * BRDF * radiance(shadow, depth, Xi);
+            Ray shadow = Ray(poc, randomCosHemi(normal, Xi));
+            return hit -> emit + hit -> color * radiance(shadow, depth, Xi);
         }
     }
 }
 
-Vec3d Stage::randomHemisphere(const Vec3d &normal, unsigned short *Xi) {
+Vec3d Stage::randomCosHemi(const Vec3d &normal, unsigned short *Xi) {
     Vec3d xx;
     if (fabs(normal.x) > stage::EPS)
         xx = Vec3d(normal.y, -normal.x, 0).unit();
     else
         xx = Vec3d(0, -normal.z, normal.y).unit();
-    Vec3d yy = normal.cross(yy);
+    Vec3d yy = normal.cross(xx);
     // a formula for random direction
     // http://mathproofs.blogspot.com/2005/04/uniform-random-distribution-on-sphere.html
-    double theta0 = 3.5 * PI * erand48(Xi);
-    double theta1 = acos(1 - 2 * erand48(Xi));
-    return xx * sin(theta0) * sin(theta1) + yy * cos(theta0) * sin(theta1) + normal * cos(theta1);
+    double theta = 2 * PI * erand48(Xi);
+    double r = erand48(Xi);
+    double sr = sqrt(r);
+    return (xx * sin(theta) * sr + yy * cos(theta) * sr + normal * sqrt(1 -r)).unit();
 }
 
 // path tracing core algorithm
@@ -122,7 +116,7 @@ Canvas* Stage::RayTrace(int h1, int h2, int w1, int w2, int samp, double resl) {
                 auto ray = eye.getRay(x, y);
                 light = light + radiance(ray, 0, Xi) * (1. / samp);
             }
-            rst->addPaint(yi, xi, light * .25);
+            rst->addPaint(yi, xi, light);
         }
     }
 

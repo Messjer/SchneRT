@@ -30,7 +30,7 @@ namespace stage {
 
         virtual double intersect(const Ray &ray) const = 0;
 
-        virtual Vec3d normal(const Vec3d &pos) const = 0;
+        virtual Vec3d normal(const Ray &ray) const = 0;
 
         virtual bool touched(const Vec3d &poc) const = 0;
 
@@ -51,7 +51,7 @@ namespace stage {
 
         double intersect(const Ray &ray) const override;
 
-        Vec3d normal(const Vec3d &poc) const override { return (poc - pos).unit(); }
+        Vec3d normal(const Ray &ray) const override;
 
         bool touched(const Vec3d &poc) const override { return fabs((pos - poc).dot(pos - poc) - rad * rad) < EPS; }
 

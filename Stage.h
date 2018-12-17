@@ -51,11 +51,11 @@ namespace stage {
          * @Return: A *Canvas* of the output range, only specified rectangle areas is rendered */
         Canvas *RayTrace(int h1, int h2, int w1, int w2, int samp, double resl);
 
-    private:
+    // private:
         Camera eye;
         std::vector<Object*> objects;
         Vec3d radiance(const Ray &ray, int depth, unsigned short *Xi);
-        Vec3d randomHemisphere(const Vec3d &normal, unsigned short *Xi);
+        Vec3d randomCosHemi(const Vec3d &normal, unsigned short *Xi);
         std::pair<int,double> intersect(const Ray &ray);
     };
 
