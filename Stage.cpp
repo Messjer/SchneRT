@@ -48,19 +48,36 @@ Vec3d Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
     // cout <<"hit " <<id <<endl;
     const Object * hit = objects[id];
 
-    if (++depth > 3) return hit -> emit;
+    if (++depth > 5) return hit -> emit;
 
     // point of contact
     Vec3d poc = ray.src + ray.dir * t;
     assert(hit -> touched(poc));
-    Vec3d normal = hit -> normal(Ray(poc, ray.dir));
+    Vec3d normal, normal_orig = hit -> normal(Ray(poc, ray.dir));
+    bool into = normal_orig.dot(ray.dir) < 0;
+    if (!into)
+        normal = normal_orig * -1;
+    else
+        normal = normal_orig;
 
     /* compute the shadow rays */
 
     // specular reflection
     switch (hit -> refl) {
         // Specular Reflection
-        case Object::REFR:
+        case Object::REFR: {
+            Ray reflect = Ray(poc, (ray.dir - normal * 2 * normal.dot(ray.dir)).unit());
+            bool into = normal_orig.dot(ray.dir) < EPS;
+            double nc=1, nt=1.5, nnt=into?nc/nt:nt/nc, ddn=ray.dir.dot(normal), cos2t;
+            if ((cos2t=1-nnt*nnt*(1-ddn*ddn))<0)    // Total internal reflection
+                return hit -> emit + hit -> color * (radiance(reflect,depth,Xi));
+            Vec3d tdir = (ray.dir*nnt - normal*(ddn*nnt+sqrt(cos2t))).unit();
+            double a=nt-nc, b=nt+nc, R0=a*a/(b*b), c = 1-(into?-ddn:tdir.dot(normal_orig));
+            double Re=R0+(1-R0)*c*c*c*c*c,Tr=1-Re,P=.25+.5*Re,RP=Re/P,TP=Tr/(1-P);
+            return hit -> emit + hit -> color *(depth>2 ? (erand48(Xi)<P ?   // Russian roulette
+                                             radiance(reflect,depth,Xi)*RP:radiance(Ray(poc,tdir),depth,Xi)*TP) :
+                                  radiance(reflect,depth,Xi)*Re+radiance(Ray(poc,tdir),depth,Xi)*Tr);
+        }
         case Object::SPEC: {
             Ray reflect = Ray(poc, (ray.dir - normal * 2 * normal.dot(ray.dir)).unit());
             return hit->emit + hit->color * radiance(reflect, depth, Xi);
@@ -73,6 +90,8 @@ Vec3d Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
 }
 
 Vec3d Stage::randomCosHemi(const Vec3d &normal, unsigned short *Xi) {
+    /* generate random vector obeying cosine distribution */
+
     Vec3d xx;
     if (fabs(normal.x) > stage::EPS)
         xx = Vec3d(normal.y, -normal.x, 0).unit();
@@ -80,7 +99,7 @@ Vec3d Stage::randomCosHemi(const Vec3d &normal, unsigned short *Xi) {
         xx = Vec3d(0, -normal.z, normal.y).unit();
     Vec3d yy = normal.cross(xx);
     // a formula for random direction
-    // http://mathproofs.blogspot.com/2005/04/uniform-random-distribution-on-sphere.html
+    // https://cg.informatik.uni-freiburg.de/course_notes/graphics2_08_renderingEquation.pdf
     double theta = 2 * PI * erand48(Xi);
     double r = erand48(Xi);
     double sr = sqrt(r);

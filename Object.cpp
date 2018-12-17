@@ -32,6 +32,5 @@ double Sphere::intersect(const stage::Ray &ray) const {
 
 Vec3d Sphere::normal(const stage::Ray &ray) const {
     assert(touched(ray.src));
-    Vec3d out = (ray.src - pos).unit();
-    return out * (ray.dir.dot(out) < EPS ? 1 : -1);
+    return (ray.src - pos).unit();
 }

@@ -18,11 +18,12 @@ namespace stage {
             DIFF, SPEC, REFR
         };
 
+        double n, refr;
 
         Vec3d pos, emit, color;
         Refl_Type refl;
 
-        Object(Vec3d p, Vec3d e, Vec3d c, Refl_Type refl) : pos(p), emit(e), color(c), refl(refl) {}
+        Object(Vec3d p, Vec3d e, Vec3d c, Refl_Type refl, double n) : pos(p), emit(e), color(c), refl(refl), n(n), refr(.7) {}
 
         virtual ~Object() = default;
 
@@ -43,7 +44,7 @@ namespace stage {
     private:
         double rad;
     public:
-        Sphere(double rad, Vec3d p, Vec3d e, Vec3d c, Refl_Type refl) : Object(p, e, c, refl), rad(rad) {}
+        Sphere(double rad, Vec3d p, Vec3d e, Vec3d c, Refl_Type refl, double n = 1.5) : Object(p, e, c, refl, n), rad(rad) {}
 
         ~Sphere() override = default;
 
