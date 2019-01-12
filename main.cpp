@@ -10,8 +10,8 @@ int main(int argc, char **argv) {
         resl = strtod(argv[2], NULL);
     }
     stage::Stage stg;
-    Canvas *canvas = stg.RayTrace(samp, resl);
-    canvas -> drawToFile("try.ppm");
+    Canvas *canvas = stg.ray_trace(samp, resl);
+    canvas->draw_to_file("try.ppm");
     delete canvas;
     return 0;
 }

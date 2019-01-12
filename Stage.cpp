@@ -7,7 +7,7 @@
 using namespace stage;
 using namespace std;
 
-Stage::Stage(): eye(Vec3d(50, 52, 295.6), Vec3d(0, -0.042612, -1), Vec3d(1), 140, .00064, 1024, 768) {
+Stage::Stage(string description): eye(Vec3d(50, 52, 295.6), Vec3d(0, -0.042612, -1), Vec3d(1), 140, .00064, 1024, 768) {
     objects.push_back(new Sphere(1e5, Vec3d(1e5 + 1, 40.8, 81.6), COLOR_BLACK, Vec3d(.75, .25, .25), Object::DIFF));//Left
     objects.push_back(new Sphere(1e5, Vec3d(-1e5 + 99, 40.8, 81.6), COLOR_BLACK, Vec3d(.25, .25, .75), Object::DIFF));//Rght
     objects.push_back(new Sphere(1e5, Vec3d(50, 40.8, 1e5), COLOR_BLACK, Vec3d(.75, .75, .75), Object::DIFF));//Back
@@ -15,8 +15,12 @@ Stage::Stage(): eye(Vec3d(50, 52, 295.6), Vec3d(0, -0.042612, -1), Vec3d(1), 140
     objects.push_back(new Sphere(1e5, Vec3d(50, 1e5, 81.6), COLOR_BLACK, Vec3d(.75, .75, .75), Object::DIFF));//Botm
     objects.push_back(new Sphere(1e5, Vec3d(50, -1e5 + 81.6, 81.6), COLOR_BLACK, Vec3d(.75, .75, .75), Object::DIFF));//Top
     objects.push_back(new Sphere(16.5, Vec3d(27, 16.5, 47), COLOR_BLACK, Vec3d(1, 1, 1) * .999, Object::SPEC));//Mirr
-    objects.push_back(new Sphere(16.5, Vec3d(73, 16.5, 78), COLOR_BLACK, Vec3d(1, 1, 1) * .999, Object::REFR));//Glas
-    objects.push_back(new Sphere(600, Vec3d(50, 681.6 - .27, 81.6), Vec3d(12, 12, 12), COLOR_BLACK, Object::DIFF));//Lite
+    objects.push_back(new Sphere(16.5, Vec3d(73, 16.5, 78), COLOR_BLACK, Vec3d(1, 0.5, 0) * .999, Object::REFR));//Glas
+    objects.push_back(new Sphere(599.82, Vec3d(50, 681.6 - .27, 81.6), Vec3d(12, 12, 12), COLOR_BLACK, Object::DIFF));//Lite
+    objects.push_back(new Sphere(3, Vec3d(73, 16.5, 78), Vec3d(15,15,15), COLOR_BLACK, Object::DIFF));//Lite
+    //objects.push_back(new Sphere(3, Vec3d(27, 45, 47), Vec3d(0,15,10), COLOR_BLACK, Object::DIFF));//Lite2
+    objects.push_back(new Sphere(3, Vec3d(50, 50, 47), Vec3d(0,3,15), COLOR_BLACK, Object::DIFF));//LiteUp
+    objects.push_back(new Sphere(3.2, Vec3d(50, 50, 47), COLOR_BLACK, Vec3d(1,1,1), Object::REFR));//LiteUp
 }
 
 Stage::~Stage() {
@@ -83,13 +87,13 @@ Vec3d Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
             return hit->emit + hit->color * radiance(reflect, depth, Xi);
         }
         case Object::DIFF: {
-            Ray shadow = Ray(poc, randomCosHemi(normal, Xi));
+            Ray shadow = Ray(poc, random_hemi_ray_cos(normal, Xi));
             return hit -> emit + hit -> color * radiance(shadow, depth, Xi);
         }
     }
 }
 
-Vec3d Stage::randomCosHemi(const Vec3d &normal, unsigned short *Xi) {
+Vec3d Stage::random_hemi_ray_cos(const Vec3d &normal, unsigned short *Xi) {
     /* generate random vector obeying cosine distribution */
 
     Vec3d xx;
@@ -107,7 +111,7 @@ Vec3d Stage::randomCosHemi(const Vec3d &normal, unsigned short *Xi) {
 }
 
 // path tracing core algorithm
-Canvas* Stage::RayTrace(int h1, int h2, int w1, int w2, int samp, double resl) {
+Canvas* Stage::ray_trace(int h1, int h2, int w1, int w2, int samp, double resl) {
     assert(w2 > w1 && w1 >= 0 && w2 <= eye.w && h2 > h1 && h1 >=0 && h2 <= eye.h);
     int newY = (h2 - h1)/resl, newX = (w2 - w1)/resl;
     auto *rst = new Canvas((h2 - h1)/resl, (w2 - w1)/resl);
@@ -123,7 +127,7 @@ Canvas* Stage::RayTrace(int h1, int h2, int w1, int w2, int samp, double resl) {
         Xi[2] = y * y * y;
         double pctg = 100.*(y - h1)/((h2 - h1)-1);
         if (pctg > 50 && !done) {
-            rst->drawToFile("temp.ppm");
+            rst->draw_to_file("temp.ppm");
             done = true;
         }
         fprintf(stderr,"\rRendering (%d spp) %5.2f%%",samp,pctg);
@@ -132,17 +136,17 @@ Canvas* Stage::RayTrace(int h1, int h2, int w1, int w2, int samp, double resl) {
             light = COLOR_BLACK;
             for (int s  = 0; s < samp; s++) {
                 // cast a ray
-                auto ray = eye.getRay(x, y);
+                auto ray = eye.get_ray(x, y);
                 light = light + radiance(ray, 0, Xi) * (1. / samp);
             }
-            rst->addPaint(yi, xi, light);
+            rst->add_paint(yi, xi, light);
         }
     }
 
     return rst;
 }
 
-Ray Camera::getRay(int x, int y) {
+Ray Camera::get_ray(int x, int y) {
     double dx = x - w * .5;
     double dy = y - h * .5;
     Vec3d d = dir + right * (dx * scale) + up * (dy * scale);

@@ -32,30 +32,30 @@ namespace stage {
             up = dir.cross(right);
             // std::cout <<"Camera Ready!" <<std::endl <<"Located at " <<src <<std::endl << " Up = " <<up  <<std::endl << " Right = " <<right <<std::endl;
         }
-        Ray getRay(int x, int y);
+        Ray get_ray(int x, int y);
     };
 
     class Stage {
     public:
-        Stage();
+        Stage(std::string description);
         ~Stage();
-        void setCamera(Camera cam) { this -> eye = cam; }
-        void addObject(const Object &object) { objects.push_back(object.clone()); }
+        void set_cam(Camera cam) { this -> eye = cam; }
+        void add_object(const Object &object) { objects.push_back(object.clone()); }
 
-        Canvas *RayTrace(int samp = 200, double resl = 1) { return RayTrace(0, eye.h, 0, eye.w, samp, resl); }
+        Canvas *ray_trace(int samp = 200, double resl = 1) { return ray_trace(0, eye.h, 0, eye.w, samp, resl); }
 
         /* Perform raytracing and output a Canvas
          * path tracing core algorithm
          * @Params: 0 <= w1 <= w2 <= eye.w
          * @Params: 0 <= h1 <= h2 <= eye.h
          * @Return: A *Canvas* of the output range, only specified rectangle areas is rendered */
-        Canvas *RayTrace(int h1, int h2, int w1, int w2, int samp, double resl);
+        Canvas *ray_trace(int h1, int h2, int w1, int w2, int samp, double resl);
 
     // private:
         Camera eye;
         std::vector<Object*> objects;
         Vec3d radiance(const Ray &ray, int depth, unsigned short *Xi);
-        Vec3d randomCosHemi(const Vec3d &normal, unsigned short *Xi);
+        Vec3d random_hemi_ray_cos(const Vec3d &normal, unsigned short *Xi);
         std::pair<int,double> intersect(const Ray &ray);
     };
 

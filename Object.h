@@ -27,7 +27,7 @@ namespace stage {
 
         virtual ~Object() = default;
 
-        virtual Type getType() = 0;
+        virtual Type get_type() = 0;
 
         virtual double intersect(const Ray &ray) const = 0;
 
@@ -37,7 +37,7 @@ namespace stage {
 
         virtual Object *clone() const = 0;
 
-        virtual std::string toString() const = 0;
+        virtual std::string to_string() const = 0;
     };
 
     class Sphere : public Object {
@@ -48,7 +48,7 @@ namespace stage {
 
         ~Sphere() override = default;
 
-        Type getType() override { return Object::SPHERE; }
+        Type get_type() override { return Object::SPHERE; }
 
         double intersect(const Ray &ray) const override;
 
@@ -58,7 +58,7 @@ namespace stage {
 
         Sphere *clone() const override { return new Sphere(rad, pos, emit, color, refl); };
 
-        std::string toString() const override {
+        std::string to_string() const override {
             std::stringstream ss;
             ss <<"pos: " <<pos <<std::endl <<rad;
             return ss.str();
