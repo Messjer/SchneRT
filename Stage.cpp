@@ -4,10 +4,11 @@
 
 #include "Stage.h"
 #include "Object.h"
+#include "Bezier.h"
 using namespace stage;
 using namespace std;
 
-Stage::Stage(string fname): eye(Vec3d(50, 52, 295.6), Vec3d(0, -0.042612, -1), Vec3d(1), 140, .00064, 1024, 768) {
+Stage::Stage(string fname): eye(Vec(50, 52, 295.6), Vec(0, -0.042612, -1), Vec(1), 140, .00064, 1024, 768) {
     ifstream fin(fname.c_str());
     string str;
     while (fin >> str) {
@@ -20,6 +21,12 @@ Stage::Stage(string fname): eye(Vec3d(50, 52, 295.6), Vec3d(0, -0.042612, -1), V
             auto *s = new Sphere();
             fin >>(*s);
             objects.push_back(s);
+        } else if (str == "Bezier") {
+            auto *obj = new BezierRotational();
+            fin >>(*obj);
+            obj -> genObj(100, 100);
+            cout <<"HEL" <<endl;
+            objects.push_back(obj);
         } else {
             cerr <<std::string("Unrecognized object : ") + str <<endl;
             exit(-1);
@@ -35,40 +42,36 @@ Stage::~Stage() {
 
 }
 
-pair<int, double> Stage::intersect(const Ray &ray) {
-    double rst = INF_D; int id = -1;
+Intersection Stage::intersect(const Ray &ray) {
+    Intersection rst;
     for (int i = 0; i < objects.size(); i++) {
-        double t = objects[i] -> intersect(ray);
-        if (t < rst) {
-            id = i;
-            rst = t;
+        Intersection tmp = objects[i] -> intersect(ray);
+        if (tmp.type != MISS && tmp.t < rst.t) {
+            rst = tmp;
         }
     }
-    return make_pair(id, rst);
+    return rst;
 }
 
-Vec3d Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
-    int id;
-    double t;
-    std::tie(id, t) = intersect(ray);
+Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
+    Intersection intersection = intersect(ray);
 
-    if (id == -1)
+    if (intersection.type == MISS)
         return COLOR_BLACK;
 
-    // cout <<"hit " <<id <<endl;
-    const Object *hit = objects[id];
+    const Object *hit = intersection.hit;
 
     if (++depth > 5) return hit->emit;
 
     // point of contact
-    Vec3d poc = ray.src + ray.dir * t;
+    Vec poc = intersection.poc;
 
     /* if (!(hit -> touched(poc))) {
         cerr<< poc << " does not touch " <<(*hit) <<endl;
         exit(-1);
     } */
 
-    Vec3d normal, normal_orig = hit->normal(Ray(poc, ray.dir));
+    Vec normal, normal_orig = intersection.normal;
     bool into = normal_orig.dot(ray.dir) < 0;
     if (!into)
         normal = normal_orig * -1;
@@ -77,7 +80,7 @@ Vec3d Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
 
     /* compute the shadow rays */
 
-    Vec3d color = hit -> emit;
+    Vec color = hit -> emit;
 
     // refraction
     if (hit->refr > EPS) {
@@ -86,7 +89,7 @@ Vec3d Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
         double nc = 1, nt = 1.5, nnt = into ? nc / nt : nt / nc, ddn = ray.dir.dot(normal), cos2t;
         if ((cos2t = 1 - nnt * nnt * (1 - ddn * ddn)) < 0)    // Total internal reflection
             return hit->emit + hit->color * (radiance(reflect, depth, Xi));
-        Vec3d tdir = (ray.dir * nnt - normal * (ddn * nnt + sqrt(cos2t))).unit();
+        Vec tdir = (ray.dir * nnt - normal * (ddn * nnt + sqrt(cos2t))).unit();
         double a = nt - nc, b = nt + nc, R0 = a * a / (b * b), c = 1 - (into ? -ddn : tdir.dot(normal_orig));
         double Re = R0 + (1 - R0) * c * c * c * c * c, Tr = 1 - Re, P = .25 + .5 * Re, RP = Re / P, TP = Tr / (1 - P);
         color = color +
@@ -113,15 +116,15 @@ Vec3d Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
 
 }
 
-Vec3d Stage::random_hemi_ray_cos(const Vec3d &normal, unsigned short *Xi) {
+Vec Stage::random_hemi_ray_cos(const Vec &normal, unsigned short *Xi) {
     /* generate random vector obeying cosine distribution */
 
-    Vec3d xx;
+    Vec xx;
     if (fabs(normal.x) > stage::EPS)
-        xx = Vec3d(normal.y, -normal.x, 0).unit();
+        xx = Vec(normal.y, -normal.x, 0).unit();
     else
-        xx = Vec3d(0, -normal.z, normal.y).unit();
-    Vec3d yy = normal.cross(xx);
+        xx = Vec(0, -normal.z, normal.y).unit();
+    Vec yy = normal.cross(xx);
     // a formula for random direction
     // https://cg.informatik.uni-freiburg.de/course_notes/graphics2_08_renderingEquation.pdf
     double theta = 2 * PI * erand48(Xi);
@@ -137,7 +140,7 @@ Canvas* Stage::ray_trace(int h1, int h2, int w1, int w2, int samp, double resl) 
     auto *rst = new Canvas((h2 - h1)/resl, (w2 - w1)/resl);
 
     // loop over every pixel
-    Vec3d light;
+    Vec light;
     bool done = false;
 #pragma omp parallel for schedule(dynamic, 1) private(light) shared(done)
     for (int yi = 0; yi < newY; yi++) {  // rows
@@ -175,7 +178,7 @@ Canvas* Stage::ray_trace(int h1, int h2, int w1, int w2, int samp, double resl) 
 Ray Camera::get_ray(double x, double y) {
     double dx = x - w * .5;
     double dy = y - h * .5;
-    Vec3d d = dir + right * (dx * scale) + up * (dy * scale);
+    Vec d = dir + right * (dx * scale) + up * (dy * scale);
     return {src + d * dist, d.unit()};
 }
 

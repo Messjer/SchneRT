@@ -7,14 +7,17 @@
 #include "utils.h"
 
 namespace stage {
-    //using std::operator<<;
-    //using std::operator>>;
+    enum HitType {
+        MISS, INTO, OUTO
+    };
+
+    class Object;
 
     class Ray {
     public:
-        Vec3d src, dir;
+        Vec src, dir;
 
-        Ray(Vec3d s, Vec3d d) : src(s), dir(d.unit()) {};
+        Ray(Vec s, Vec d) : src(s), dir(d.unit()) {};
 
         friend std::ostream &operator <<(std::ostream &out, const Ray &ray) {
             out << "Source is " <<ray.src <<std::endl;
@@ -23,15 +26,25 @@ namespace stage {
         }
     };
 
+    class Intersection {
+    public:
+        HitType type;
+        double t;
+        Vec poc;
+        Vec normal;
+        const Object* hit;
+        Intersection(): type(MISS), t(INF_D) {}
+    };
+
     class Object {
     public:
         enum Type {
-            SPHERE
+            SPHERE, BEZIER
         };
 
         double n;
 
-        Vec3d pos, emit, color;
+        Vec pos, emit, color;
         double diff, refr, spec;
 
         Object() {}
@@ -40,13 +53,7 @@ namespace stage {
 
         virtual Type get_type() const = 0;
 
-        virtual double intersect(const Ray &ray) const = 0;
-
-        virtual Vec3d normal(const Ray &ray) const = 0;
-
-        virtual bool touched(const Vec3d &poc) const = 0;
-
-        virtual Object *clone() const = 0;
+        virtual Intersection intersect(const Ray &ray) const = 0;
 
         friend std::ostream &operator <<(std::ostream &fout, const Object &o);
     };
@@ -61,17 +68,9 @@ namespace stage {
 
         Type get_type() const override { return Object::SPHERE; }
 
-        double intersect(const Ray &ray) const override;
+        Intersection intersect(const Ray &ray) const override;
 
-        Vec3d normal(const Ray &ray) const override;
-
-        bool touched(const Vec3d &poc) const override { return fabs((pos - poc).dot(pos - poc) - rad * rad) / rad < EPS; }
-
-        Sphere *clone() const override {
-            Sphere *rst = new Sphere();
-            memcpy(rst, this, sizeof(Sphere));
-            return rst;
-        };
+        Vec normal(const Vec &pt) const;
 
         friend std::istream &operator >>(std::istream &fin, Sphere &s);
 

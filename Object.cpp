@@ -38,7 +38,7 @@ namespace stage {
             else if (str == "color") fin >> s.color;
             else if (str == "emit") fin >> s.emit;
             else {
-                cerr <<string("Unrecognized field: ") + str + "exists for sphere!\n";
+                cerr <<string("Unrecognized field: ") + str + " for sphere!" <<endl;
                 exit(-1);
             }
         }
@@ -47,31 +47,38 @@ namespace stage {
 }
 
 
-double Sphere::intersect(const stage::Ray &ray) const {
+Intersection Sphere::intersect(const stage::Ray &ray) const {
+    Intersection rst;
     // Solve (td + src - pos)^2 = R^2
     // i.e. t^2 d.d + 2t(src - pos).d + (src - pos).(src - pos) = R^2
     // By . we mean dot product
-    Vec3d sp = pos - ray.src;
+    Vec sp = pos - ray.src;
     double b = sp.dot(ray.dir);
-    // cout <<ray.dir <<endl;
     double t = 0, delta = b * b - sp.dot(sp) + rad * rad;
-    //cout <<delta <<endl;
 
     // no solution
-    if (delta < EPS) return INF_D;
+    if (delta < EPS) return rst;
     else delta = sqrt(delta);
 
 
-    if ((t = b - delta) > EPS)
-        return t;
-    else if ((t = b + delta) > EPS)
-        return t;
-    else
-        return INF_D;
+    if ((t = b - delta) > EPS) {
+        rst.t = t;
+        rst.type = INTO;
+    }
+    else if ((t = b + delta) > EPS) {
+        rst.t = t;
+        rst.type = OUTO;
+    } else
+        return rst;
+
+    rst.poc = ray.src + ray.dir * t;
+    rst.normal = normal(rst.poc);
+    rst.hit = this;
+    return rst;
 }
 
-Vec3d Sphere::normal(const stage::Ray &ray) const {
+Vec Sphere::normal(const Vec &pt) const {
     // assert(touched(ray.src));
-    return (ray.src - pos).unit();
+    return (pt - pos).unit();
 }
 

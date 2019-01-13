@@ -12,8 +12,8 @@ namespace stage {
     public:
         int w, h;
         double scale, dist;
-        Vec3d right, up;
-        Camera(Vec3d s, Vec3d d, Vec3d r, double dist, double scale, int w, int h): Ray(s, d), dist(dist), w(w), h(h), right(
+        Vec right, up;
+        Camera(Vec s, Vec d, Vec r, double dist, double scale, int w, int h): Ray(s, d), dist(dist), w(w), h(h), right(
                 r.unit()), scale(scale) {
             up = dir.cross(right);
             // std::cout <<"Camera Ready!" <<std::endl <<"Located at " <<src <<std::endl << " Up = " <<up  <<std::endl << " Right = " <<right <<std::endl;
@@ -25,8 +25,6 @@ namespace stage {
     public:
         Stage(std::string description);
         ~Stage();
-        void set_cam(Camera cam) { this -> eye = cam; }
-        void add_object(const Object &object) { objects.push_back(object.clone()); }
 
         Canvas *ray_trace(int samp = 200, double resl = 1) { return ray_trace(0, eye.h, 0, eye.w, samp, resl); }
 
@@ -40,14 +38,14 @@ namespace stage {
     // private:
         Camera eye;
         std::vector<Object*> objects;
-        Vec3d radiance(const Ray &ray, int depth, unsigned short *Xi);
-        Vec3d random_hemi_ray_cos(const Vec3d &normal, unsigned short *Xi);
-        std::pair<int,double> intersect(const Ray &ray);
+        Vec radiance(const Ray &ray, int depth, unsigned short *Xi);
+        Vec random_hemi_ray_cos(const Vec &normal, unsigned short *Xi);
+        Intersection intersect(const Ray &ray);
 
         friend std::ostream &operator <<(std::ostream &out, const Stage &stage);
     };
 
-    static const Vec3d COLOR_BLACK = {};
+    static const Vec COLOR_BLACK = {};
 
 }
 

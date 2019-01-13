@@ -11,8 +11,8 @@ int main(int argc, char **argv) {
     }
     stage::Stage stg("stage.txt");
     cout <<stg;
-    Canvas *canvas = stg.ray_trace(samp, resl);
-    canvas->draw_to_file("try.png");
-    delete canvas;
+    //Canvas *canvas = stg.ray_trace(samp, resl);
+    //canvas->draw_to_file("try.png");
+    //delete canvas;
     return 0;
 }

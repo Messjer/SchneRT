@@ -68,3 +68,17 @@ Sphere
     emit 12 12 12
     diff 1
 end
+
+# Bezier Rotational
+Bezier
+    nu 4
+    controls
+    2.2 0 0
+    1.7 0 0.8
+    1.7 0 0.7
+    1.7 0 1.2
+    o 0 8.5 -2.99
+    axis 0 0 1
+    color 1 0.2 0.4
+    diff 1
+end
