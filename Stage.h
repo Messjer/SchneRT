@@ -8,20 +8,6 @@
 #include "Object.h"
 
 namespace stage {
-
-    class Ray {
-    public:
-        Vec3d src, dir;
-
-        Ray(Vec3d s, Vec3d d) : src(s), dir(d.unit()) {};
-
-        friend std::ostream &operator <<(std::ostream &out, const Ray &ray) {
-            out << "Source is " <<ray.src <<std::endl;
-            out << "Dir is " <<ray.dir <<std::endl;
-            return out;
-        }
-    };
-
     class Camera : public Ray {
     public:
         int w, h;
@@ -32,7 +18,7 @@ namespace stage {
             up = dir.cross(right);
             // std::cout <<"Camera Ready!" <<std::endl <<"Located at " <<src <<std::endl << " Up = " <<up  <<std::endl << " Right = " <<right <<std::endl;
         }
-        Ray get_ray(int x, int y);
+        Ray get_ray(double x, double y);
     };
 
     class Stage {
@@ -57,6 +43,8 @@ namespace stage {
         Vec3d radiance(const Ray &ray, int depth, unsigned short *Xi);
         Vec3d random_hemi_ray_cos(const Vec3d &normal, unsigned short *Xi);
         std::pair<int,double> intersect(const Ray &ray);
+
+        friend std::ostream &operator <<(std::ostream &out, const Stage &stage);
     };
 
     static const Vec3d COLOR_BLACK = {};

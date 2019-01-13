@@ -7,23 +7,34 @@
 #include "utils.h"
 
 namespace stage {
-    class Ray;
+    //using std::operator<<;
+    //using std::operator>>;
+
+    class Ray {
+    public:
+        Vec3d src, dir;
+
+        Ray(Vec3d s, Vec3d d) : src(s), dir(d.unit()) {};
+
+        friend std::ostream &operator <<(std::ostream &out, const Ray &ray) {
+            out << "Source is " <<ray.src <<std::endl;
+            out << "Dir is " <<ray.dir <<std::endl;
+            return out;
+        }
+    };
 
     class Object {
     public:
         enum Type {
             SPHERE
         };
-        enum Refl_Type {
-            DIFF, SPEC, REFR
-        };
 
-        double n, refr;
+        double n;
 
         Vec3d pos, emit, color;
-        Refl_Type refl;
+        double diff, refr, spec;
 
-        Object(Vec3d p, Vec3d e, Vec3d c, Refl_Type refl, double n) : pos(p), emit(e), color(c), refl(refl), n(n), refr(.7) {}
+        Object() {}
 
         virtual ~Object() = default;
 
@@ -37,14 +48,14 @@ namespace stage {
 
         virtual Object *clone() const = 0;
 
-        virtual std::string to_string() const = 0;
+        friend std::ostream &operator <<(std::ostream &fout, Object &o);
     };
 
     class Sphere : public Object {
     private:
         double rad;
     public:
-        Sphere(double rad, Vec3d p, Vec3d e, Vec3d c, Refl_Type refl, double n = 1.5) : Object(p, e, c, refl, n), rad(rad) {}
+        Sphere() {}
 
         ~Sphere() override = default;
 
@@ -56,13 +67,15 @@ namespace stage {
 
         bool touched(const Vec3d &poc) const override { return fabs((pos - poc).dot(pos - poc) - rad * rad) < EPS; }
 
-        Sphere *clone() const override { return new Sphere(rad, pos, emit, color, refl); };
-
-        std::string to_string() const override {
-            std::stringstream ss;
-            ss <<"pos: " <<pos <<std::endl <<rad;
-            return ss.str();
+        Sphere *clone() const override {
+            Sphere *rst = new Sphere();
+            memcpy(rst, this, sizeof(Sphere));
+            return rst;
         };
+
+        friend std::istream &operator >>(std::istream &fin, Sphere &s);
+
+        friend std::ostream &operator <<(std::ostream &fout, Sphere &s);
     };
 }
 

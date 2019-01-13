@@ -9,7 +9,8 @@ int main(int argc, char **argv) {
         samp = strtol(argv[1], NULL, 10);
         resl = strtod(argv[2], NULL);
     }
-    stage::Stage stg;
+    stage::Stage stg("stage.txt");
+    cout <<stg;
     Canvas *canvas = stg.ray_trace(samp, resl);
     canvas->draw_to_file("try.ppm");
     delete canvas;

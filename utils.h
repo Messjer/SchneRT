@@ -7,6 +7,8 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
+#include <sstream>
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -15,11 +17,10 @@
 #include <list>
 #include <cassert>
 #include <tuple>
-#include <sstream>
 
 
 namespace stage {
-    static const double EPS = 1e-4;
+    static const double EPS = 1e-6;
     static const double INF_D = 1e20;
     static const double PI = acos(-1);
 }
@@ -39,6 +40,10 @@ struct Vec3d {
     friend std::ostream &operator <<(std::ostream &out, const Vec3d &v) {
         out <<v.x <<" , " <<v.y << " , " <<v.z;
         return out;
+    }
+    friend std::istream &operator >>(std::istream &fin, Vec3d &s) {
+        fin >>s.x >>s.y >>s.z;
+        return fin;
     }
 };
 

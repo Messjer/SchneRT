@@ -1,0 +1,70 @@
+# Left wall
+#Sphere
+#    rad 1e5
+#    pos 100001 40.8 81.6
+#    color .75 .25 .25
+#    diff 1
+#end
+
+# Right wall
+#Sphere
+#    rad 1e5
+#    pos -99901 40.8 81.6
+#    color .25 .25 .75
+#    diff 1
+#end
+
+# Back wall
+#Sphere
+#    rad 1e5
+#    pos 50 40.8 1e5
+#    color .75 .75 .75
+#    diff 1
+#end
+
+# Front 
+Sphere
+    rad 1e5
+    pos 50 40.8 -99830.0
+    diff 1
+end
+
+# Bottom wall
+Sphere
+    rad 1e5
+    pos 50 1e5 81.6
+    color .75 .75 .75
+    diff 1
+end
+
+# Top wall
+Sphere
+    rad 1e5
+    pos 50 -99918.4 81.6
+    color .25 .75 .75
+    diff 1
+end
+
+# Mirror Ball
+Sphere
+    rad 16.5
+    pos 27 16.5 47
+    color .999 .999 .999
+    spec 1
+end
+
+# Glass ball
+Sphere
+    rad 16.5
+    pos 73 16.5 78
+    color .999 0.4995 0
+    refr 1
+end
+
+# Light
+Sphere
+    rad 600
+    pos 50 681.33 81.6
+    emit 12 12 12
+    diff 1
+end
