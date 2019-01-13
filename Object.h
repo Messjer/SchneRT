@@ -38,7 +38,7 @@ namespace stage {
 
         virtual ~Object() = default;
 
-        virtual Type get_type() = 0;
+        virtual Type get_type() const = 0;
 
         virtual double intersect(const Ray &ray) const = 0;
 
@@ -48,7 +48,7 @@ namespace stage {
 
         virtual Object *clone() const = 0;
 
-        friend std::ostream &operator <<(std::ostream &fout, Object &o);
+        friend std::ostream &operator <<(std::ostream &fout, const Object &o);
     };
 
     class Sphere : public Object {
@@ -59,13 +59,13 @@ namespace stage {
 
         ~Sphere() override = default;
 
-        Type get_type() override { return Object::SPHERE; }
+        Type get_type() const override { return Object::SPHERE; }
 
         double intersect(const Ray &ray) const override;
 
         Vec3d normal(const Ray &ray) const override;
 
-        bool touched(const Vec3d &poc) const override { return fabs((pos - poc).dot(pos - poc) - rad * rad) < EPS; }
+        bool touched(const Vec3d &poc) const override { return fabs((pos - poc).dot(pos - poc) - rad * rad) / rad < EPS; }
 
         Sphere *clone() const override {
             Sphere *rst = new Sphere();
@@ -75,7 +75,7 @@ namespace stage {
 
         friend std::istream &operator >>(std::istream &fin, Sphere &s);
 
-        friend std::ostream &operator <<(std::ostream &fout, Sphere &s);
+        friend std::ostream &operator <<(std::ostream &fout, const Sphere &s);
     };
 }
 

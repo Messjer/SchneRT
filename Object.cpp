@@ -8,7 +8,7 @@ using namespace stage;
 using namespace std;
 
 namespace stage {
-    ostream &operator<<(std::ostream &fout, Object &o) {
+    ostream &operator<<(std::ostream &fout, const Object &o) {
         switch (o.get_type()) {
             case Object::SPHERE:
                 fout << (*((Sphere *) &o)) << endl;
@@ -16,7 +16,7 @@ namespace stage {
         return fout;
     }
 
-    ostream &operator<<(std::ostream &fout, Sphere &s) {
+    ostream &operator<<(std::ostream &fout, const Sphere &s) {
         fout << "Sphere of radius : " <<s.rad << endl;
         fout << "At : " << s.pos <<" , ";
         fout << "Color : " << s.color << " , ";
@@ -38,7 +38,8 @@ namespace stage {
             else if (str == "color") fin >> s.color;
             else if (str == "emit") fin >> s.emit;
             else {
-                throw string("No field") + str + "exists for sphere!\n";
+                cerr <<string("Unrecognized field: ") + str + "exists for sphere!\n";
+                exit(-1);
             }
         }
         return fin;
@@ -70,7 +71,7 @@ double Sphere::intersect(const stage::Ray &ray) const {
 }
 
 Vec3d Sphere::normal(const stage::Ray &ray) const {
-    assert(touched(ray.src));
+    // assert(touched(ray.src));
     return (ray.src - pos).unit();
 }
 

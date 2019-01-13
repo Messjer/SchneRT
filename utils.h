@@ -18,6 +18,7 @@
 #include <cassert>
 #include <tuple>
 
+typedef unsigned int uint;
 
 namespace stage {
     static const double EPS = 1e-6;

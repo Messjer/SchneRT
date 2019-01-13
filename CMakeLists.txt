@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(SchneRT)
 find_package(OpenMP)
-
 set(CMAKE_CXX_STANDARD 14)
 
 if (OPENMP_FOUND)
@@ -9,4 +8,9 @@ if (OPENMP_FOUND)
     set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif()
 
+find_package(PNG REQUIRED)
+include_directories(${PNG_INCLUDE_DIR})
+
 add_executable(SchneRT main.cpp Canvas.cpp Canvas.h utils.h Stage.cpp Stage.h Object.cpp Object.h)
+
+target_link_libraries(SchneRT ${PNG_LIBRARY})

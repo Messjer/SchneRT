@@ -1,6 +1,0 @@
-
-// Left wall
-Sphere
-    pos 100001, 40.8, 81.6
-    color .75 .25 .25
-    diff 1

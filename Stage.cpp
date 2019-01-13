@@ -13,13 +13,16 @@ Stage::Stage(string fname): eye(Vec3d(50, 52, 295.6), Vec3d(0, -0.042612, -1), V
     while (fin >> str) {
         //ignore empty lines and comments
         if (str.length() <= 0 || str[0] == '#') {
-            fin.ignore();
+            fin.ignore(256, '\n');
             continue;
         }
         if (str == "Sphere") {
             auto *s = new Sphere();
             fin >>(*s);
             objects.push_back(s);
+        } else {
+            cerr <<std::string("Unrecognized object : ") + str <<endl;
+            exit(-1);
         }
 
     }
@@ -59,7 +62,12 @@ Vec3d Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
 
     // point of contact
     Vec3d poc = ray.src + ray.dir * t;
-    assert(hit->touched(poc));
+
+    /* if (!(hit -> touched(poc))) {
+        cerr<< poc << " does not touch " <<(*hit) <<endl;
+        exit(-1);
+    } */
+
     Vec3d normal, normal_orig = hit->normal(Ray(poc, ray.dir));
     bool into = normal_orig.dot(ray.dir) < 0;
     if (!into)
@@ -139,7 +147,7 @@ Canvas* Stage::ray_trace(int h1, int h2, int w1, int w2, int samp, double resl) 
         Xi[2] = y * y * y;
         double pctg = 100.*(y - h1)/((h2 - h1)-1);
         if (pctg > 50 && !done) {
-            rst->draw_to_file("temp.ppm");
+            rst->draw_to_file("temp.png");
             done = true;
         }
         fprintf(stderr,"\rRendering (%d spp) %5.2f%%",samp,pctg);

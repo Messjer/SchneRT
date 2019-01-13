@@ -15,12 +15,12 @@
 #end
 
 # Back wall
-#Sphere
-#    rad 1e5
-#    pos 50 40.8 1e5
-#    color .75 .75 .75
-#    diff 1
-#end
+Sphere
+    rad 1e5
+    pos 50 40.8 1e5
+    color .25 .25 .75
+    diff 1
+end
 
 # Front 
 Sphere
