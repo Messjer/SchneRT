@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.5)
 project(SchneRT)
 find_package(OpenMP)
 set(CMAKE_CXX_STANDARD 14)
