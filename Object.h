@@ -48,7 +48,7 @@ namespace stage {
         Vec pos, emit, color, absorb;
         double diff, refr, spec;
 
-        Object() {}
+        Object(): diff(0), refr(0), spec(0) {}
 
         virtual ~Object() = default;
 
@@ -82,7 +82,7 @@ namespace stage {
         // used pos to store vector to the plane from (0,0,0)
     private:
         // normalized normal
-        Vec N, normalized;
+        Vec normalized;
         double dist;
     public:
         Plane() {}
@@ -93,9 +93,17 @@ namespace stage {
 
         Intersection intersect(const Ray &ray) const override;
 
+        void set(double dist, Vec normalized) {
+            int sign = dist > 0 ? 1 : -1;
+            this->dist = dist * sign; this->normalized = normalized * sign;
+            this->pos = this->normalized * this -> dist;
+        }
+
         friend std::istream &operator >>(std::istream &fin, Plane &s);
 
         friend std::ostream &operator <<(std::ostream &fout, const Plane &s);
+
+        friend class AABBox;
     };
 
     class AABBox : public Object {
@@ -114,9 +122,13 @@ namespace stage {
 
         bool contains(const Vec &pt) const;
 
+        void make_faces();
+
         friend std::istream &operator >>(std::istream &fin, AABBox &s);
 
         friend std::ostream &operator <<(std::ostream &fout, const AABBox &s);
+
+        friend class BezierRotational;
     };
 }
 

@@ -73,7 +73,7 @@ namespace stage {
         while(fin >> str) {
             if (str == "end") break;
             if (str == "pos") fin >> s.pos;
-            else if (str == "N") fin >> s.N;
+            else if (str == "N") fin >> s.normalized;
             else if (str == "diff") fin >> s.diff;
             else if (str == "spec") fin >> s.spec;
             else if (str == "refr") fin >> s.refr;
@@ -85,7 +85,6 @@ namespace stage {
             }
         }
         s.dist = s.pos.norm();
-        s.normalized = s.N;
         s.normalized.unit();
         return fin;
     }
@@ -211,4 +210,15 @@ bool AABBox::contains(const Vec &pt) const {
             valid = false;
     }
     return valid;
+}
+
+void AABBox::make_faces() {
+    for (int i = 0; i < 6; i++) {
+        Vec normal = Vec(0, 0, 0);
+        normal[i / 2] = 1;
+        if (i & 1)
+            faces[i].set(low[i / 2], normal);
+        else
+            faces[i].set(high[i / 2], normal);
+    }
 }

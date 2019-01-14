@@ -64,9 +64,34 @@ Vec BezierRotational::eval(double u, double v) {
     return point;
 }
 
-Intersection BezierRotational::intersect(const Ray &) const {
-    Intersection rst;
-    return rst;
+void BezierRotational::compute_b_box() {
+    double max_abs[3];
+    for (int i = 0; i < points.size(); i++) {
+        if (abs(points[i][0]) > max_abs[0])
+            max_abs[0] = abs(points[i][0]);
+        if (points[i][2] < b_box.low[2])
+            b_box.low[2] = points[i][2];
+        if (points[i][2] > b_box.high[2])
+            b_box.high[2] = points[i][2];
+    }
+    b_box.low[0] = -max_abs[0];
+    b_box.high[0] = max_abs[0];
+    b_box.low[1] = -max_abs[0];
+    b_box.high[1] = max_abs[0];
+    for (int d = 0; d < 3; d++)
+    {
+        b_box.low[d] += pos[d];
+        b_box.high[d] += pos[d];
+    }
+    b_box.make_faces();
+}
+
+Intersection BezierRotational::intersect(const Ray &ray) const {
+    Intersection with_box = b_box.intersect(ray);
+    if (with_box.type == MISS) return with_box;
+
+    // only if with_box is not miss will we use Newton's method
+    double t = with_box.t;
 }
 
 namespace stage {
@@ -100,6 +125,8 @@ namespace stage {
                 exit(-1);
             }
         }
+        b.compute_b_box();
+        b.b_box.make_faces();
         return fin;
     }
 
@@ -111,6 +138,7 @@ namespace stage {
         }
         fout << "Axis : " <<o.axis;
         fout <<endl;
+        fout << "Bounding box is " <<o.b_box <<endl;
 
         return fout;
     }

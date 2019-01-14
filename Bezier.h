@@ -30,7 +30,7 @@ namespace stage {
     private:
         int nu, nv;
         Vec axis;
-        //AABBox b_box;
+        AABBox b_box;
         std::vector<Vec> points;
     public:
         BezierRotational() {};
@@ -38,6 +38,7 @@ namespace stage {
         Type get_type() const override { return BEZIER; };
         Vec eval(double nu, double nv);
         void genObj(int nu, int nv);
+        void compute_b_box();
         friend std::istream &operator>>(std::istream &fin, BezierRotational &b);
         friend std::ostream &operator<<(std::ostream &fout, const BezierRotational &o);
     };
