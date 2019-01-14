@@ -26,7 +26,7 @@ Vec BezierCurve::deri(BezierCurve curve, double t) {
     vector<Vec> new_points;
     int size = curve.c_points.size();
     for (int i = 0; i < size - 1 ; i++)
-        new_points.push_back((curve.c_points[i + 1] - curve.c_points[i]) * (size - 1) * t);
+        new_points.push_back((curve.c_points[i + 1] - curve.c_points[i]) * (size - 1));
     BezierCurve reduced = BezierCurve(new_points);
     return eval(reduced, t);
 }
@@ -105,7 +105,7 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
     Intersection rst;
 
     Intersection with_box = b_box.intersect(ray);
-    return with_box;
+
     if (with_box.type == MISS) return rst;
 
     double ans_t = INF_D;
@@ -118,11 +118,11 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
     X <<with_box.t, drand48(), drand48();
     Vec src = ray.src, dir = ray.dir;
     for (int q = 0; q < NEWTON_ATTEMPT; q++) {
-        Vec du, dv;
+        Vec du, dv, f;
         for (int i = 0; i < NEWTON_ITER; i++) {
             // one iteration of newton's method
             Vec p = eval(X(1), X(2));
-            Vec f = src + dir * X(0) - p;
+            f = src + dir * X(0) - p;
             du = this->du(X(1), X(2));
             dv = this->dv(p);
             Eigen::Matrix3d J(3, 3);
@@ -130,12 +130,14 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
             b << f.x, f.y, f.z;
             J << dir.x, -du.x, -dv.x, dir.y, -du.y, -dv.y, dir.z, -du.z, -dv.z;
             // By Jd_x = f, where d_x + X = next_X
-            Eigen::Vector3d d_x = J.colPivHouseholderQr().solve(b);
+            Eigen::Vector3d d_x = J.inverse().eval() * b;
             prev_X = X;
             X = X + d_x;
             if ((prev_X - X).norm() < NEWTON_DELTA || f.norm() < NEWTON_EPS)
                 break;
         }
+        if ((prev_X - X).norm() >= NEWTON_DELTA || f.norm() >= NEWTON_EPS)
+            break;
         double t = X(0);
         if (t < ans_t) {
             ans_t = t;
