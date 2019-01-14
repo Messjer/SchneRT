@@ -57,8 +57,10 @@ end
 Sphere
     rad 16.5
     pos 73 16.5 78
-    color .999 0.4995 0
+    color .999 0.999 0.999
     refr 1
+    n 1.5
+    absorb 1 1 1
 end
 
 # Light

@@ -30,7 +30,7 @@ namespace stage {
     private:
         int nu, nv;
         Vec axis;
-        //Box b_box;
+        //AABBox b_box;
         std::vector<Vec> points;
     public:
         BezierRotational() {};

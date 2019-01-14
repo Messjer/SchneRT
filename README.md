@@ -10,7 +10,7 @@ Ray Tracer project for THU Course `Advanced Computer Graphics`
     - Diffuse Reflection
     - Refraction
 - Natively supports smooth shadows and caustics by MCPT.
-- Cornell Box Scene modified from `Smallpt`
+- Cornell AABBox Scene modified from `Smallpt`
 
 ## References
 - [Smallpt](http://www.kevinbeason.com/smallpt/)

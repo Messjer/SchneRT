@@ -74,12 +74,12 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
         exit(-1);
     } */
 
-    Vec normal, normal_orig = intersection.normal;
-    bool into = normal_orig.dot(ray.dir) < 0;
+    Vec normal_orig, normal = intersection.normal;
+    bool into = intersection.type == INTO;
     if (!into)
-        normal = normal_orig * -1;
+        normal_orig = normal * -1;
     else
-        normal = normal_orig;
+        normal_orig = normal;
 
     /* compute the shadow rays */
 
@@ -88,7 +88,6 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
     // refraction
     if (hit->refr > EPS) {
         Ray reflect = Ray(poc, (ray.dir - normal * 2 * normal.dot(ray.dir)).unit());
-        bool into = normal_orig.dot(ray.dir) < EPS;
         double nc = 1, nt = 1.5, nnt = into ? nc / nt : nt / nc, ddn = ray.dir.dot(normal), cos2t;
         if ((cos2t = 1 - nnt * nnt * (1 - ddn * ddn)) < 0)    // Total internal reflection
             return hit->emit + hit->color * (radiance(reflect, depth, Xi));
@@ -101,6 +100,22 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
                                                       radiance(Ray(poc, tdir), depth, Xi) * TP) :
                                          radiance(reflect, depth, Xi) * Re + radiance(Ray(poc, tdir), depth, Xi) * Tr)
                          ;
+        /*Vec N;
+        double n;
+        HitType type = intersection.type;
+        n = (type == INTO) ? 1 / hit->n : hit->n;
+        double cosi = -(N.dot(ray.dir));
+        double cosr2 = 1.0 - n * n * (1 - cosi * cosi);
+        //Ray reflect = Ray(poc, (ray.dir - normal * 2 * normal.dot(ray.dir)).unit());
+        if(cosr2 > EPS)
+        {
+            Vec alpha = Vec(1, 1, 1) * hit->refr;
+            if(type == OUTO) alpha = alpha * (hit->absorb * (-intersection.t)).get_exp();
+            Vec new_dir = ray.dir + intersection.normal * (n * cosi - sqrt(cosr2)) * n;
+            color = color +
+                    hit->color +
+                                  alpha * radiance(Ray(poc, new_dir), depth+1, Xi);
+        }*/
     }
 
     // specular

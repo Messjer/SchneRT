@@ -39,12 +39,12 @@ namespace stage {
     class Object {
     public:
         enum Type {
-            SPHERE, PLANE, BEZIER
+            SPHERE, PLANE, BEZIER, BOX
         };
 
         double n;
 
-        Vec pos, emit, color;
+        Vec pos, emit, color, absorb;
         double diff, refr, spec;
 
         Object() {}
@@ -95,6 +95,25 @@ namespace stage {
         friend std::istream &operator >>(std::istream &fin, Plane &s);
 
         friend std::ostream &operator <<(std::ostream &fout, const Plane &s);
+    };
+
+    class AABBox : public Object {
+    private:
+        // six faces (origin is (0,0,0))
+        Vec low, high;
+        Plane faces[6];
+    public:
+        AABBox(): low(INF_D, INF_D, INF_D), high(-INF_D, -INF_D, -INF_D) {}
+
+        ~AABBox() override = default;
+
+        Type get_type() const override { return Object::BOX; }
+
+        Intersection intersect(const Ray &ray) const override;
+
+        friend std::istream &operator >>(std::istream &fin, AABBox &s);
+
+        friend std::ostream &operator <<(std::ostream &fout, const AABBox &s);
     };
 }
 

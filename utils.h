@@ -68,6 +68,22 @@ struct Vec {
         }
     }
 
+    const double &operator [] (int i) const {
+        switch (i) {
+            case 0:
+                return x;
+            case 1:
+                return y;
+            case 2:
+                return z;
+            default:
+                std::cerr <<"vector index out of bounds!" <<std::endl;
+                exit(-1);
+        }
+    }
+
+    Vec get_exp() {return Vec(exp(x), exp(y), exp(z)); }
+
     friend std::ostream &operator <<(std::ostream &out, const Vec &v) {
         out <<v.x <<" , " <<v.y << " , " <<v.z;
         return out;
