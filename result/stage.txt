@@ -1,3 +1,51 @@
+eye
+    pos 50 52 295.6
+    dir 0 -0.042612 -1
+    r 1 0 0
+    dist 140
+    scale .00064
+    w 1024
+    h 768
+end
+
+# AABB (order : right, left, up, down, front, back)
+AABB
+    pos 0 0 0
+    color 0 .75 .25
+    diff 1
+    faces
+        pos 60 0 0
+        N -1 0 0
+        color .75 0 .25
+        diff 1
+    end
+        pos 40 0 0
+        N -1 0 0
+        color 0 .75 .25
+        diff 1
+    end
+        pos 0 50 0
+        N 0 -1 0
+        color .3 .86 0
+        diff 1
+    end
+        pos 0 30 0
+        N 0 1 0
+        color .3 .57 .25
+        diff 1
+    end
+        pos 0 0 75
+        N 0 0 -1
+        color .9 .6 .9
+        diff 1
+    end
+        pos 0 0 55
+        N 0 0 1
+        color .75 .25 .25
+        diff 1
+    end
+end
+
 # Left wall
 Plane
     pos -1 0 0
@@ -18,7 +66,7 @@ end
 Plane
     pos 0 0 0
     N 0 0 1
-    color .25 .75 .75
+    color .25 .25 .25
     diff 1
 end
 
@@ -41,7 +89,7 @@ end
 Plane
     pos 0 81.6 0
     N 0 -1 0
-    color .25 .75 .75
+    color .75 .75 .75
     diff 1
 end
 
@@ -57,7 +105,7 @@ end
 Sphere
     rad 16.5
     pos 73 16.5 78
-    color .999 0.999 0.999
+    color .999 .333 0
     refr 1
     n 1.5
 end

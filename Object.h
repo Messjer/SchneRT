@@ -17,6 +17,7 @@ namespace stage {
     public:
         Vec src, dir;
 
+        Ray() {}
         Ray(Vec s, Vec d) : src(s), dir(d.unit()) {};
 
         friend std::ostream &operator <<(std::ostream &out, const Ray &ray) {
@@ -110,6 +111,8 @@ namespace stage {
         Type get_type() const override { return Object::BOX; }
 
         Intersection intersect(const Ray &ray) const override;
+
+        bool contains(const Vec &pt) const;
 
         friend std::istream &operator >>(std::istream &fin, AABBox &s);
 

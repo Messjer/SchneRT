@@ -13,12 +13,15 @@ namespace stage {
         int w, h;
         double scale, dist;
         Vec right, up;
+        Camera() {}
         Camera(Vec s, Vec d, Vec r, double dist, double scale, int w, int h): Ray(s, d), dist(dist), w(w), h(h), right(
                 r.unit()), scale(scale) {
             up = dir.cross(right);
             // std::cout <<"Camera Ready!" <<std::endl <<"Located at " <<src <<std::endl << " Up = " <<up  <<std::endl << " Right = " <<right <<std::endl;
         }
         Ray get_ray(double x, double y);
+
+        friend std::istream &operator >>(std::istream &out, Camera &eye);
     };
 
     class Stage {

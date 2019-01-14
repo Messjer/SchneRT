@@ -8,7 +8,7 @@
 using namespace stage;
 using namespace std;
 
-Stage::Stage(string fname): eye(Vec(50, 52, 295.6), Vec(0, -0.042612, -1), Vec(1), 140, .00064, 1024, 768) {
+Stage::Stage(string fname) {
     ifstream fin(fname.c_str());
     string str;
     while (fin >> str) {
@@ -17,7 +17,9 @@ Stage::Stage(string fname): eye(Vec(50, 52, 295.6), Vec(0, -0.042612, -1), Vec(1
             fin.ignore(256, '\n');
             continue;
         }
-        if (str == "Sphere") {
+        if (str == "eye") {
+            fin >>eye;
+        } else if (str == "Sphere") {
             auto *s = new Sphere();
             fin >>(*s);
             objects.push_back(s);
@@ -28,9 +30,13 @@ Stage::Stage(string fname): eye(Vec(50, 52, 295.6), Vec(0, -0.042612, -1), Vec(1
         } else if (str == "Bezier") {
             auto *obj = new BezierRotational();
             fin >>(*obj);
-            obj -> genObj(100, 100);
+            //obj -> genObj(100, 100);
             objects.push_back(obj);
-        } else{
+        } else if (str == "AABB") {
+            auto *obj = new AABBox();
+            fin >>(*obj);
+            objects.push_back(obj);
+        } else {
             cerr <<std::string("Unrecognized object : ") + str <<endl;
             exit(-1);
         }
@@ -193,5 +199,27 @@ namespace stage {
             out << (*obj) << endl;
         }
         return out;
+    }
+    std::istream &operator >>(std::istream &fin, Camera &eye) {
+        string str;
+        while(fin >> str) {
+            if (str == "end") break;
+            if (str == "pos") fin >> eye.src;
+            else if (str == "dir") fin >> eye.dir;
+            else if (str == "dist") fin >> eye.dist;
+            else if (str == "w") fin >> eye.w;
+            else if (str == "h") fin >> eye.h;
+            else if (str == "scale") fin >>eye.scale;
+            else if (str == "r") {
+                fin >>eye.right;
+                eye.right.unit();
+            }
+            else {
+                cerr <<string("Unrecognized field: ") + str + " for camera!" <<endl;
+                exit(-1);
+            }
+        }
+        eye.up = eye.dir.cross(eye.right);
+        return fin;
     }
 }

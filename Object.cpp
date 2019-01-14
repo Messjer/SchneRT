@@ -20,6 +20,9 @@ namespace stage {
             case Object::PLANE:
                 fout << (*((Plane *) &o)) << endl;
                 break;
+            case Object::BOX:
+                fout << (*((AABBox *) &o)) <<endl;
+                break;
         }
         return fout;
     }
@@ -95,12 +98,11 @@ namespace stage {
             else if (str == "faces") {
                 for (int i = 0; i < 6; i++) {
                     fin >> s.faces[i];
-                    for (int d = 0; d < 3; d++) {
-                        if (s.low[d] > s.faces[i].pos[d])
-                            s.low[d] = s.faces[i].pos[d];
-                        if (s.high[d] < s.faces[i].pos[d])
-                            s.high[d] = s.faces[i].pos[d];
-                    }
+                    int d = i / 2;
+                    if (i & 1)
+                        s.low[d] = s.faces[i].pos[d];
+                    else
+                        s.high[d] = s.faces[i].pos[d];
                 }
             }
             else if (str == "diff") fin >> s.diff;
@@ -109,7 +111,7 @@ namespace stage {
             else if (str == "color") fin >> s.color;
             else if (str == "emit") fin >> s.emit;
             else {
-                cerr <<string("Unrecognized field: ") + str + " for sphere!" <<endl;
+                cerr <<string("Unrecognized field: ") + str + " for AABB!" <<endl;
                 exit(-1);
             }
         }
@@ -117,8 +119,9 @@ namespace stage {
     }
 
     std::ostream &operator <<(std::ostream &fout, const AABBox &s) {
-        fout << "AABB At : " << s.pos <<" , ";
-        cout << "Faces are " <<endl;
+        fout << "AABB At : " << s.pos <<endl;
+        fout << "low is " <<s.low <<" high is " <<s.high <<endl;
+        fout << "Faces are " <<endl;
         for (int i = 0; i < 6; i++)
             fout <<s.faces[i] <<endl;
         fout << "Color : " << s.color << " , ";
@@ -186,20 +189,26 @@ Intersection Plane::intersect(const Ray &ray) const {
 
 Intersection AABBox::intersect(const Ray &ray) const {
     Intersection rst;
+    HitType type =  contains(ray.src) ? OUTO : INTO;
     for (int i = 0; i < 6; i++) {
         Intersection tmp = faces[i].intersect(ray);
         if (tmp.type != MISS && tmp.t < rst.t) {
             Vec poc = tmp.poc;
-            bool valid = true;
-            for (int d = 0; d < 3; d++) {
-                if (poc[d] > high[d] || poc[d] < low[d])
-                    valid = false;
-            }
-            if (valid) {
+            if (contains(poc)) {
                 rst = tmp;
                 rst.hit = this;
+                rst.type = type;
             }
         }
     }
     return rst;
+}
+
+bool AABBox::contains(const Vec &pt) const {
+    bool valid = true;
+    for (int d = 0; d < 3; d++) {
+        if (pt[d] > high[d] || pt[d] < low[d])
+            valid = false;
+    }
+    return valid;
 }
