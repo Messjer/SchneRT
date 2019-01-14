@@ -3,6 +3,7 @@
 //
 
 #include "Bezier.h"
+#include <eigen3/Eigen/Dense>
 
 using namespace std;
 using namespace stage;
@@ -57,22 +58,34 @@ void BezierRotational::genObj(int nu, int nv)
     fclose(fp);
 }
 
-Vec BezierRotational::eval(double u, double v) {
-    BezierCurve curve = BezierCurve(points);
-    Vec point = curve.eval(curve, u);
+Vec BezierRotational::eval(double u, double v) const {
+    Vec point = BezierCurve::eval(curve, u);
     point = point.rotate(axis, 2 * PI * v) + pos;
     return point;
 }
 
+Vec BezierRotational::du(double u, double v) const {
+    Vec deriv = BezierCurve::deri(curve, u);
+    return deriv.rotate(axis, 2 * PI * v);
+}
+
+Vec BezierRotational::dv(Vec pt) const {
+    //Vec d;
+    //d = (axis * (pt - pos)).unit();
+    //d = d * sqrt(pt.norm() * pt.norm() - ((pt - pos).dot(axis))*(pt - pos).dot(axis)) * 2 * PI;
+    return {-pt.y * 2 * PI,pt.x * 2 * PI, 0};
+    //return d;
+}
+
 void BezierRotational::compute_b_box() {
     double max_abs[3];
-    for (int i = 0; i < points.size(); i++) {
-        if (abs(points[i][0]) > max_abs[0])
-            max_abs[0] = abs(points[i][0]);
-        if (points[i][2] < b_box.low[2])
-            b_box.low[2] = points[i][2];
-        if (points[i][2] > b_box.high[2])
-            b_box.high[2] = points[i][2];
+    for (int i = 0; i < curve.c_points.size(); i++) {
+        if (abs(curve.c_points[i][0]) > max_abs[0])
+            max_abs[0] = abs(curve.c_points[i][0]);
+        if (curve.c_points[i][2] < b_box.low[2])
+            b_box.low[2] = curve.c_points[i][2];
+        if (curve.c_points[i][2] > b_box.high[2])
+            b_box.high[2] = curve.c_points[i][2];
     }
     b_box.low[0] = -max_abs[0];
     b_box.high[0] = max_abs[0];
@@ -83,20 +96,70 @@ void BezierRotational::compute_b_box() {
         b_box.low[d] += pos[d];
         b_box.high[d] += pos[d];
     }
+    b_box.color = Vec(1,0,0);
+    b_box.diff = 1;
     b_box.make_faces();
 }
 
 Intersection BezierRotational::intersect(const Ray &ray) const {
+    Intersection rst;
+
     Intersection with_box = b_box.intersect(ray);
-    if (with_box.type == MISS) return with_box;
+    return with_box;
+    if (with_box.type == MISS) return rst;
+
+    double ans_t = INF_D;
+    Vec ans_du, ans_dv;
 
     // only if with_box is not miss will we use Newton's method
-    double t = with_box.t;
+    Eigen::Vector3d X(3), prev_X(3);
+    // first guess
+    // t, u, v respecitvely
+    X <<with_box.t, drand48(), drand48();
+    Vec src = ray.src, dir = ray.dir;
+    for (int q = 0; q < NEWTON_ATTEMPT; q++) {
+        Vec du, dv;
+        for (int i = 0; i < NEWTON_ITER; i++) {
+            // one iteration of newton's method
+            Vec p = eval(X(1), X(2));
+            Vec f = src + dir * X(0) - p;
+            du = this->du(X(1), X(2));
+            dv = this->dv(p);
+            Eigen::Matrix3d J(3, 3);
+            Eigen::Vector3d b(3);
+            b << f.x, f.y, f.z;
+            J << dir.x, -du.x, -dv.x, dir.y, -du.y, -dv.y, dir.z, -du.z, -dv.z;
+            // By Jd_x = f, where d_x + X = next_X
+            Eigen::Vector3d d_x = J.colPivHouseholderQr().solve(b);
+            prev_X = X;
+            X = X + d_x;
+            if ((prev_X - X).norm() < NEWTON_DELTA || f.norm() < NEWTON_EPS)
+                break;
+        }
+        double t = X(0);
+        if (t < ans_t) {
+            ans_t = t;
+            ans_du = du;
+            ans_dv = dv;
+        }
+    }
+
+    if (ans_t < INF_D ) {
+        rst.t = ans_t;
+        rst.type = dir.dot(ans_du * ans_dv) > 0 ? INTO : OUTO;
+        rst.normal = (rst.type == INTO ? ans_dv.cross(ans_du) : ans_du.cross(ans_dv)).unit();
+        rst.poc = src + dir * rst.t;
+        rst.hit = this;
+        return rst;
+    }
+
+    return rst;
 }
 
 namespace stage {
     std::istream &operator>>(std::istream &fin, BezierRotational &b) {
         string str;
+        double scale = 1;
         while (fin >> str) {
             if (str == "end") break;
             if (str == "n") fin >> b.n;
@@ -113,9 +176,10 @@ namespace stage {
                     fin >> point;
                     upoints.push_back(point);
                 }
-                b.points = upoints;
+                b.curve = BezierCurve(upoints);
             }
             else if (str == "diff") fin >> b.diff;
+            else if (str == "scale") fin >> scale;
             else if (str == "spec") fin >> b.spec;
             else if (str == "refr") fin >> b.refr;
             else if (str == "color") fin >> b.color;
@@ -125,6 +189,8 @@ namespace stage {
                 exit(-1);
             }
         }
+        for (int j = 0; j < b.n; j++)
+            b.curve.c_points[j] = b.curve.c_points[j] * scale;
         b.compute_b_box();
         b.b_box.make_faces();
         return fin;
@@ -133,8 +199,8 @@ namespace stage {
     std::ostream &operator<<(std::ostream &fout, const BezierRotational &o) {
         fout << "Beizer rotational at: " <<o.pos << endl;
         fout << "Control Points: " <<endl;
-        for (auto pt : o.points) {
-            fout << pt <<endl;
+        for (int i = 0; i < o.curve.c_points.size(); i++) {
+            fout <<o.curve.c_points[i] <<endl;
         }
         fout << "Axis : " <<o.axis;
         fout <<endl;

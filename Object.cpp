@@ -206,7 +206,7 @@ Intersection AABBox::intersect(const Ray &ray) const {
 bool AABBox::contains(const Vec &pt) const {
     bool valid = true;
     for (int d = 0; d < 3; d++) {
-        if (pt[d] > high[d] || pt[d] < low[d])
+        if (pt[d] > high[d] + EPS || pt[d] < low[d] - EPS)
             valid = false;
     }
     return valid;

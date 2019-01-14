@@ -9,42 +9,30 @@ eye
 end
 
 # AABB (order : right, left, up, down, front, back)
-AABB
-    pos 0 0 0
-    color 0 .75 .25
-    diff 1
-    faces
-        pos 60 0 0
-        N -1 0 0
-        color .75 0 .25
-        diff 1
-    end
-        pos 40 0 0
-        N -1 0 0
-        color 0 .75 .25
-        diff 1
-    end
-        pos 0 50 0
-        N 0 -1 0
-        color .3 .86 0
-        diff 1
-    end
-        pos 0 30 0
-        N 0 1 0
-        color .3 .57 .25
-        diff 1
-    end
-        pos 0 0 75
-        N 0 0 -1
-        color .9 .6 .9
-        diff 1
-    end
-        pos 0 0 55
-        N 0 0 1
-        color .75 .25 .25
-        diff 1
-    end
-end
+#AABB
+#    pos 0 0 0
+#    color 0 .75 .25
+#    diff 1
+#    faces
+#        pos 67.9 0 0
+#        N -1 0 0
+#    end
+#        pos 32.1 0 0
+#        N -1 0 0
+#    end
+#        pos 0 57.9 0
+#        N 0 -1 0
+#    end
+#        pos 0 22.1 0
+#        N 0 1 0
+#    end
+#        pos 0 0 57.6
+#        N 0 0 -1
+#    end
+#        pos 0 0 40
+#        N 0 0 1
+#    end
+#end
 
 # Left wall
 Plane
@@ -94,21 +82,21 @@ Plane
 end
 
 # Mirror Ball
-Sphere
-    rad 16.5
-    pos 27 16.5 47
-    color .999 .999 .999
-    spec 1
-end
+#Sphere
+#    rad 16.5
+#    pos 27 16.5 47
+#    color .999 .999 .999
+#    spec 1
+#end
 
 # Glass ball
-Sphere
-    rad 16.5
-    pos 73 16.5 78
-    color .999 .333 0
-    refr 1
-    n 1.5
-end
+#Sphere
+#    rad 16.5
+#    pos 73 16.5 78
+#    color .999 .333 0
+#    refr 1
+#    n 1.5
+#end
 
 # Light
 Sphere
@@ -127,7 +115,8 @@ Bezier
     3.4 0 1.27
     -2.45 0 3.52
     0 0 3.5
-    pos 0 8.5 -2.99
+    scale 5
+    pos 30 30 30
     axis 0 0 1
     color 1 0.2 0.4
     diff 1

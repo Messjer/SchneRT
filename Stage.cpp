@@ -70,6 +70,11 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
 
     const Object *hit = intersection.hit;
 
+    if (hit -> get_type() == Object::BOX) {
+        //cout <<intersection.normal <<endl;
+        //exit(1);
+    }
+
     if (++depth > 5) return hit->emit;
 
     // point of contact

@@ -9,9 +9,9 @@
 
 namespace stage {
     class BezierCurve {
-    private:
-        std::vector<Vec> c_points;
     public:
+        std::vector<Vec> c_points;
+        BezierCurve() {}
         BezierCurve(std::vector<Vec> c_points) : c_points(c_points) {}
 
         static Vec eval(BezierCurve curve, double t);
@@ -28,15 +28,21 @@ namespace stage {
 
     class BezierRotational : public Object {
     private:
+        const int NEWTON_ITER = 40;
+        const int NEWTON_ATTEMPT = 15;
+        const double NEWTON_EPS = 0.005;
+        const double NEWTON_DELTA = 0.0005;
         int nu, nv;
         Vec axis;
         AABBox b_box;
-        std::vector<Vec> points;
+        BezierCurve curve;
     public:
         BezierRotational() {};
         Intersection intersect(const Ray &) const override;
         Type get_type() const override { return BEZIER; };
-        Vec eval(double nu, double nv);
+        Vec eval(double u, double v) const;
+        Vec du(double u, double v) const;
+        Vec dv(Vec pt) const;
         void genObj(int nu, int nv);
         void compute_b_box();
         friend std::istream &operator>>(std::istream &fin, BezierRotational &b);
