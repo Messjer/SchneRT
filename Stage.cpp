@@ -21,13 +21,16 @@ Stage::Stage(string fname): eye(Vec(50, 52, 295.6), Vec(0, -0.042612, -1), Vec(1
             auto *s = new Sphere();
             fin >>(*s);
             objects.push_back(s);
+        } else if (str == "Plane") {
+            auto *obj = new Plane();
+            fin >>(*obj);
+            objects.push_back(obj);
         } else if (str == "Bezier") {
             auto *obj = new BezierRotational();
             fin >>(*obj);
             obj -> genObj(100, 100);
-            cout <<"HEL" <<endl;
             objects.push_back(obj);
-        } else {
+        } else{
             cerr <<std::string("Unrecognized object : ") + str <<endl;
             exit(-1);
         }

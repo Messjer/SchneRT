@@ -29,7 +29,7 @@ namespace stage {
     class BezierRotational : public Object {
     private:
         int nu, nv;
-        Vec axis, o;
+        Vec axis;
         //Box b_box;
         std::vector<Vec> points;
     public:
@@ -39,6 +39,7 @@ namespace stage {
         Vec eval(double nu, double nv);
         void genObj(int nu, int nv);
         friend std::istream &operator>>(std::istream &fin, BezierRotational &b);
+        friend std::ostream &operator<<(std::ostream &fout, const BezierRotational &o);
     };
 }
 

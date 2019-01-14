@@ -60,7 +60,7 @@ void BezierRotational::genObj(int nu, int nv)
 Vec BezierRotational::eval(double u, double v) {
     BezierCurve curve = BezierCurve(points);
     Vec point = curve.eval(curve, u);
-    point = point.rotate(axis, 2 * PI * v) + o;
+    point = point.rotate(axis, 2 * PI * v) + pos;
     return point;
 }
 
@@ -74,18 +74,17 @@ namespace stage {
         string str;
         while (fin >> str) {
             if (str == "end") break;
-            if (str == "nv") fin >> b.nv;
-            else if (str == "nu") fin >> b.nu;
-            else if (str == "o") fin >> b.o;
+            if (str == "n") fin >> b.n;
+            else if (str == "pos") fin >> b.pos;
             else if (str == "controls") {
-                if (b.nu == 0) {
+                if (b.n == 0) {
                     cerr <<string("Please first specify number of control points!") <<endl;
                     exit(-1);
                 }
                 vector<Vec> upoints;
                 Vec point;
                 upoints.clear();
-                for (int j = 0; j < b.nu; j++) {
+                for (int j = 0; j < b.n; j++) {
                     fin >> point;
                     upoints.push_back(point);
                 }
@@ -102,5 +101,17 @@ namespace stage {
             }
         }
         return fin;
+    }
+
+    std::ostream &operator<<(std::ostream &fout, const BezierRotational &o) {
+        fout << "Beizer rotational at: " <<o.pos << endl;
+        fout << "Control Points: " <<endl;
+        for (auto pt : o.points) {
+            fout << pt <<endl;
+        }
+        fout << "Axis : " <<o.axis;
+        fout <<endl;
+
+        return fout;
     }
 }

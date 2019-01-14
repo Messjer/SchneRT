@@ -1,46 +1,46 @@
 # Left wall
-#Sphere
-#    rad 1e5
-#    pos 100001 40.8 81.6
-#    color .75 .25 .25
-#    diff 1
-#end
+Plane
+    pos -1 0 0
+    N 1 0 0
+    color .75 .25 .25
+    diff 1
+end
 
 # Right wall
-#Sphere
-#    rad 1e5
-#    pos -99901 40.8 81.6
+#Plane
+#    pos 99 0 0
+#    N -1 0 0
 #    color .25 .25 .75
 #    diff 1
 #end
 
 # Back wall
-Sphere
-    rad 1e5
-    pos 50 40.8 1e5
+Plane
+    pos 0 0 0
+    N 0 0 1
     color .25 .25 .75
     diff 1
 end
 
 # Front 
-Sphere
-    rad 1e5
-    pos 50 40.8 -99830.0
+Plane
+    pos 0 0 170
+    N 0 0 -1
     diff 1
 end
 
 # Bottom wall
-Sphere
-    rad 1e5
-    pos 50 1e5 81.6
+Plane
+    pos 0 0 0
+    N 0 1 0
     color .75 .75 .75
     diff 1
 end
 
 # Top wall
-Sphere
-    rad 1e5
-    pos 50 -99918.4 81.6
+Plane
+    pos 0 81.6 0
+    N 0 -1 0
     color .25 .75 .75
     diff 1
 end
@@ -71,13 +71,14 @@ end
 
 # Bezier Rotational
 Bezier
-    nu 4
+    n 5
     controls
-    2.2 0 0
-    1.7 0 0.8
-    1.7 0 0.7
-    1.7 0 1.2
-    o 0 8.5 -2.99
+    0 0 0
+    -3.58 0 0.12
+    3.4 0 1.27
+    -2.45 0 3.52
+    0 0 3.5
+    pos 0 8.5 -2.99
     axis 0 0 1
     color 1 0.2 0.4
     diff 1

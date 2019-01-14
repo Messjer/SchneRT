@@ -3,6 +3,7 @@
 //
 
 #include "Object.h"
+#include "Bezier.h"
 
 using namespace stage;
 using namespace std;
@@ -12,6 +13,13 @@ namespace stage {
         switch (o.get_type()) {
             case Object::SPHERE:
                 fout << (*((Sphere *) &o)) << endl;
+                break;
+            case Object::BEZIER:
+                fout << (*((BezierRotational *) &o)) << endl;
+                break;
+            case Object::PLANE:
+                fout << (*((Plane *) &o)) << endl;
+                break;
         }
         return fout;
     }
@@ -42,6 +50,38 @@ namespace stage {
                 exit(-1);
             }
         }
+        return fin;
+    }
+
+    std::ostream &operator<<(std::ostream &fout, const Plane &s) {
+        fout << "Plane At : " << s.pos <<" , ";
+        fout << "Color : " << s.color << " , ";
+        fout << "Emit : " << s.emit << " , ";
+        fout << "Refr : " << s.refr << " , ";
+        fout << "Spec : " << s.spec << " , ";
+        fout << "Diff : " << s.diff;
+        return fout;
+    }
+
+    std::istream &operator >>(std::istream &fin, Plane &s) {
+        string str;
+        while(fin >> str) {
+            if (str == "end") break;
+            if (str == "pos") fin >> s.pos;
+            else if (str == "N") fin >> s.N;
+            else if (str == "diff") fin >> s.diff;
+            else if (str == "spec") fin >> s.spec;
+            else if (str == "refr") fin >> s.refr;
+            else if (str == "color") fin >> s.color;
+            else if (str == "emit") fin >> s.emit;
+            else {
+                cerr <<string("Unrecognized field: ") + str + " for plane!" <<endl;
+                exit(-1);
+            }
+        }
+        s.dist = s.pos.norm();
+        s.normalized = s.N;
+        s.normalized.unit();
         return fin;
     }
 }
@@ -80,5 +120,23 @@ Intersection Sphere::intersect(const stage::Ray &ray) const {
 Vec Sphere::normal(const Vec &pt) const {
     // assert(touched(ray.src));
     return (pt - pos).unit();
+}
+
+Intersection Plane::intersect(const Ray &ray) const {
+    Intersection rst;
+    double dot = normalized.dot(ray.dir);
+    if(fabs(dot) < EPS) return rst;
+    double t = -(dist + normalized.dot(ray.src)) / dot;
+    if (t > EPS)
+    {
+        double sgn = dot > EPS ? -1 : 1;
+        rst.t = t;
+        rst.type = OUTO;
+        rst.poc = ray.src + ray.dir * t;
+        rst.normal = normalized * sgn;
+        rst.hit = this;
+        return rst;
+    } else
+        return rst;
 }
 

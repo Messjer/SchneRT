@@ -32,7 +32,8 @@ struct Vec {
     Vec operator-(const Vec &other) const { return {x-other.x,y-other.y,z-other.z}; }
     Vec operator*(double scale) const { return {x*scale,y*scale,z*scale}; }
     Vec operator*(const Vec &other) const { return {x*other.x,y*other.y,z*other.z}; }
-    Vec& unit(){ return *this = *this * (1/sqrt(x*x+y*y+z*z)); }
+    Vec& unit(){ return *this = *this * (1/norm()); }
+    double norm() const { return sqrt(x*x+y*y+z*z); }
     double dot(const Vec &other) const { return x*other.x+y*other.y+z*other.z; }
     // cross product
     Vec cross(Vec &other) const {return {y*other.z-z*other.y,z*other.x-x*other.z,x*other.y-y*other.x};}
@@ -52,6 +53,19 @@ struct Vec {
         ret.z += y * ( axis.z * axis.y * ( 1 - cost ) + axis.x * sint );
         ret.z += z * ( axis.z * axis.z + ( 1 - axis.z * axis.z ) * cost );
         return ret;
+    }
+    double &operator [] (int i) {
+        switch (i) {
+            case 0:
+                return x;
+            case 1:
+                return y;
+            case 2:
+                return z;
+            default:
+                std::cerr <<"vector index out of bounds!" <<std::endl;
+                exit(-1);
+        }
     }
 
     friend std::ostream &operator <<(std::ostream &out, const Vec &v) {

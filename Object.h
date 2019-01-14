@@ -39,7 +39,7 @@ namespace stage {
     class Object {
     public:
         enum Type {
-            SPHERE, BEZIER
+            SPHERE, PLANE, BEZIER
         };
 
         double n;
@@ -75,6 +75,26 @@ namespace stage {
         friend std::istream &operator >>(std::istream &fin, Sphere &s);
 
         friend std::ostream &operator <<(std::ostream &fout, const Sphere &s);
+    };
+
+    class Plane : public Object {
+        // used pos to store vector to the plane from (0,0,0)
+    private:
+        // normalized normal
+        Vec N, normalized;
+        double dist;
+    public:
+        Plane() {}
+
+        ~Plane() override = default;
+
+        Type get_type() const override { return Object::PLANE; }
+
+        Intersection intersect(const Ray &ray) const override;
+
+        friend std::istream &operator >>(std::istream &fin, Plane &s);
+
+        friend std::ostream &operator <<(std::ostream &fout, const Plane &s);
     };
 }
 
