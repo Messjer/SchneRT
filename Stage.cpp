@@ -94,40 +94,26 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
         Vec tdir = (ray.dir * nnt - normal * (ddn * nnt + sqrt(cos2t))).unit();
         double a = nt - nc, b = nt + nc, R0 = a * a / (b * b), c = 1 - (into ? -ddn : tdir.dot(normal_orig));
         double Re = R0 + (1 - R0) * c * c * c * c * c, Tr = 1 - Re, P = .25 + .5 * Re, RP = Re / P, TP = Tr / (1 - P);
-        color = color +
-                hit->color * (depth > 2 ? (erand48(Xi) < P ?   // Russian roulette
-                                                      radiance(reflect, depth, Xi) * RP :
-                                                      radiance(Ray(poc, tdir), depth, Xi) * TP) :
-                                         radiance(reflect, depth, Xi) * Re + radiance(Ray(poc, tdir), depth, Xi) * Tr)
-                         ;
-        /*Vec N;
-        double n;
-        HitType type = intersection.type;
-        n = (type == INTO) ? 1 / hit->n : hit->n;
-        double cosi = -(N.dot(ray.dir));
-        double cosr2 = 1.0 - n * n * (1 - cosi * cosi);
-        //Ray reflect = Ray(poc, (ray.dir - normal * 2 * normal.dot(ray.dir)).unit());
-        if(cosr2 > EPS)
-        {
-            Vec alpha = Vec(1, 1, 1) * hit->refr;
-            if(type == OUTO) alpha = alpha * (hit->absorb * (-intersection.t)).get_exp();
-            Vec new_dir = ray.dir + intersection.normal * (n * cosi - sqrt(cosr2)) * n;
-            color = color +
-                    hit->color +
-                                  alpha * radiance(Ray(poc, new_dir), depth+1, Xi);
-        }*/
+        Vec to_add = hit->color;
+        if (depth < 2)
+            to_add = to_add * radiance(reflect, depth, Xi) * Re + radiance(Ray(poc, tdir), depth, Xi) * Tr;
+        else if (erand48(Xi) < P)
+            to_add = to_add * radiance(reflect, depth, Xi) * RP;
+        else
+            to_add = to_add * radiance(Ray(poc, tdir), depth, Xi) * TP;
+        color = color + to_add;
     }
 
     // specular
     if (hit->spec > EPS) {
         Ray reflect = Ray(poc, (ray.dir - normal * 2 * normal.dot(ray.dir)).unit());
-        color = color + hit->color * radiance(reflect, depth, Xi) ;
+        color = color + hit->color * radiance(reflect, depth, Xi) * hit -> spec;
     }
 
     // diffuse
     if (hit->diff > EPS) {
         Ray shadow = Ray(poc, random_hemi_ray_cos(normal, Xi));
-        color = color + hit->color * radiance(shadow, depth, Xi) ;
+        color = color + hit->color * radiance(shadow, depth, Xi) * hit -> diff;
     }
 
     return color;

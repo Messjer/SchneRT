@@ -82,7 +82,7 @@ struct Vec {
         }
     }
 
-    Vec get_exp() {return Vec(exp(x), exp(y), exp(z)); }
+    Vec get_exp() {return {exp(x), exp(y), exp(z)}; }
 
     friend std::ostream &operator <<(std::ostream &out, const Vec &v) {
         out <<v.x <<" , " <<v.y << " , " <<v.z;

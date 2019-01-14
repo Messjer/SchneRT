@@ -7,18 +7,18 @@ Plane
 end
 
 # Right wall
-#Plane
-#    pos 99 0 0
-#    N -1 0 0
-#    color .25 .25 .75
-#    diff 1
-#end
+Plane
+    pos 99 0 0
+    N -1 0 0
+    color .25 .25 .75
+    diff 1
+end
 
 # Back wall
 Plane
     pos 0 0 0
     N 0 0 1
-    color .25 .25 .75
+    color .25 .75 .75
     diff 1
 end
 
@@ -60,7 +60,6 @@ Sphere
     color .999 0.999 0.999
     refr 1
     n 1.5
-    absorb 1 1 1
 end
 
 # Light
