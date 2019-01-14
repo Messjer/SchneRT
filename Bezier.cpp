@@ -3,7 +3,7 @@
 //
 
 #include "Bezier.h"
-#include <eigen3/Eigen/Dense>
+#include "Gauss.h"
 
 using namespace std;
 using namespace stage;
@@ -112,34 +112,33 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
     Vec ans_du, ans_dv;
 
     // only if with_box is not miss will we use Newton's method
-    Eigen::Vector3d X(3), prev_X(3);
+    Vec X, prev_X;
+
     // first guess
     // t, u, v respecitvely
-    X <<with_box.t, drand48(), drand48();
     Vec src = ray.src, dir = ray.dir;
     for (int q = 0; q < NEWTON_ATTEMPT; q++) {
+        bool found = false;
         Vec du, dv, f;
+        X = Vec(with_box.t, drand48(), drand48());
         for (int i = 0; i < NEWTON_ITER; i++) {
             // one iteration of newton's method
-            Vec p = eval(X(1), X(2));
-            f = src + dir * X(0) - p;
-            du = this->du(X(1), X(2));
+            Vec p = eval(X[1], X[2]);
+            f = src + dir * X[0] - p;
+            du = this->du(X[1], X[2]);
             dv = this->dv(p);
-            Eigen::Matrix3d J(3, 3);
-            Eigen::Vector3d b(3);
-            b << f.x, f.y, f.z;
-            J << dir.x, -du.x, -dv.x, dir.y, -du.y, -dv.y, dir.z, -du.z, -dv.z;
-            // By Jd_x = f, where d_x + X = next_X
-            Eigen::Vector3d d_x = J.inverse().eval() * b;
+            // By Jd_x = -f, where d_x + X = next_X
+            Vec d_x = Gauss::solve(dir * (-1), du, dv, f);
             prev_X = X;
             X = X + d_x;
-            if ((prev_X - X).norm() < NEWTON_DELTA || f.norm() < NEWTON_EPS)
+            if ((prev_X - X).norm() < NEWTON_DELTA || f.norm() < NEWTON_EPS) {
+                found = true;
                 break;
+            }
         }
-        if ((prev_X - X).norm() >= NEWTON_DELTA || f.norm() >= NEWTON_EPS)
-            break;
-        double t = X(0);
-        if (t < ans_t) {
+        double t = X[0];
+        if (found && t < ans_t) {
+            //cout <<t <<endl;
             ans_t = t;
             ans_du = du;
             ans_dv = dv;
@@ -148,8 +147,8 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
 
     if (ans_t < INF_D ) {
         rst.t = ans_t;
-        rst.type = dir.dot(ans_du * ans_dv) > 0 ? INTO : OUTO;
-        rst.normal = (rst.type == INTO ? ans_dv.cross(ans_du) : ans_du.cross(ans_dv)).unit();
+        rst.type = dir.dot(ans_du * ans_dv) > EPS ? INTO : OUTO;
+        rst.normal = (rst.type == OUTO ? ans_dv.cross(ans_du) : ans_du.cross(ans_dv)).unit();
         rst.poc = src + dir * rst.t;
         rst.hit = this;
         return rst;

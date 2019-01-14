@@ -93,5 +93,4 @@ struct Vec {
         return fin;
     }
 };
-
 #endif //SCHNERT_UTILS_H

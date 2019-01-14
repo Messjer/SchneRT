@@ -26,6 +26,7 @@ namespace stage {
 
     class Stage {
     public:
+        int reflect_cnt = 0;
         Stage(std::string description);
         ~Stage();
 

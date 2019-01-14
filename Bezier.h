@@ -28,11 +28,10 @@ namespace stage {
 
     class BezierRotational : public Object {
     private:
-        const int NEWTON_ITER = 40;
-        const int NEWTON_ATTEMPT = 15;
-        const double NEWTON_EPS = 0.005;
-        const double NEWTON_DELTA = 0.0005;
-        int nu, nv;
+        const int NEWTON_ITER = 5;
+        const int NEWTON_ATTEMPT = 10;
+        const double NEWTON_EPS = 0.05;
+        const double NEWTON_DELTA = 0.05;
         Vec axis;
         AABBox b_box;
         BezierCurve curve;

@@ -17,7 +17,9 @@ Stage::Stage(string fname) {
             fin.ignore(256, '\n');
             continue;
         }
-        if (str == "eye") {
+        if (str == "reflect_cnt") {
+            fin >>reflect_cnt;
+        } else if (str == "eye") {
             fin >>eye;
         } else if (str == "Sphere") {
             auto *s = new Sphere();
@@ -70,12 +72,12 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
 
     const Object *hit = intersection.hit;
 
-    if (hit -> get_type() == Object::BOX) {
-        //cout <<intersection.normal <<endl;
+    if (hit -> get_type() == Object::BEZIER) {
+        //cout <<intersection.poc <<endl;
         //exit(1);
     }
 
-    if (++depth > 5) return hit->emit;
+    if (++depth > reflect_cnt) return hit->emit;
 
     // point of contact
     Vec poc = intersection.poc;
