@@ -129,8 +129,8 @@ Bezier
     n 3
     controls
     0 0 0
-    -3.58 0 0.12
     3.4 0 1.27
+    0 0 3.5
     scale 5
     pos 30 30 30
     axis 0 0 1

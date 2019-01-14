@@ -32,7 +32,7 @@ Stage::Stage(string fname) {
         } else if (str == "Bezier") {
             auto *obj = new BezierRotational();
             fin >>(*obj);
-            //obj -> genObj(100, 100);
+            obj -> genObj(100, 100);
             objects.push_back(obj);
         } else if (str == "AABB") {
             auto *obj = new AABBox();
