@@ -1,4 +1,7 @@
 .DS_Store
 /cmake-build-debug
+/cmake-build-gnu
+*.png
+*.ppm
+*.obj
 /.idea
-
