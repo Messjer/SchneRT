@@ -4,7 +4,7 @@
 using namespace std;
 
 int main(int argc, char **argv) {
-    double samp, resl;
+    int samp, resl;
     ifstream fin("render.config");
     fin >>samp >>resl;
     stage::Stage stg("stage.txt");

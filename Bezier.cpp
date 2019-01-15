@@ -4,8 +4,8 @@
 
 #include "Bezier.h"
 #include "Gauss.h"
-#define NEWTON_ITER 20
-#define NEWTON_ATTEMPT 10
+#define NEWTON_ITER 10
+#define NEWTON_ATTEMPT 1
 #define NEWTON_DELTA 5e-5
 
 using namespace std;
@@ -15,10 +15,10 @@ Vec BezierCurve::eval(const BezierCurve &curve, double t) {
     // bezier curve evaluation using de Casteljau's algo
     if (curve.c_points.size() == 1)
         return curve.c_points[0];
-    vector<Vec> new_points;
     int size = curve.c_points.size();
+    vector<Vec> new_points(size - 1);
     for (int i = 0; i < size - 1; i++)
-        new_points.push_back(curve.c_points[i] * (1 - t) + curve.c_points[i + 1] * t);
+        new_points[i] = curve.c_points[i] * (1 - t) + curve.c_points[i + 1] * t;
     BezierCurve reduced = BezierCurve(new_points);
     return eval(reduced, t);
 }
@@ -27,7 +27,7 @@ Vec BezierCurve::deri(const BezierCurve &curve, double t) {
     int size = curve.c_points.size();
     vector<Vec> new_points(size - 1);
     for (int i = 0; i < size - 1 ; i++)
-        new_points.push_back((curve.c_points[i + 1] - curve.c_points[i]) * (size - 1));
+        new_points[i] = (curve.c_points[i + 1] - curve.c_points[i]) * (size - 1);
     BezierCurve reduced = BezierCurve(new_points);
     return eval(reduced, t);
 }
@@ -132,7 +132,7 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
             f = src + dir * X[0] - p;
             du = this->du(X[1], X[2]);
             dv = this->dv(p);
-            // By Jd_x = -f, where d_x + X = next_X
+            // By -J(X - X0) = f
             Vec d_x = Gauss::solve(dir * (-1) , du, dv, f);
             X = X + d_x;
             if (X[0] > EPS && X[1] > EPS && X[2] > EPS && X[1] < 1 - EPS && X[2] < 1 - EPS

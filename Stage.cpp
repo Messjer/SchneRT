@@ -5,6 +5,7 @@
 #include "Stage.h"
 #include "Object.h"
 #include "Bezier.h"
+#define REFLECT_CNT 3
 using namespace stage;
 using namespace std;
 
@@ -16,9 +17,6 @@ Stage::Stage(string fname) {
         if (str.length() <= 0 || str[0] == '#') {
             fin.ignore(256, '\n');
             continue;
-        }
-        if (str == "reflect_cnt") {
-            fin >>reflect_cnt;
         } else if (str == "eye") {
             fin >>eye;
         } else if (str == "Sphere") {
@@ -71,9 +69,11 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
         return COLOR_BLACK;
 
     const Object *hit = intersection.hit;
-    //return hit -> color;
+    // if (depth == 0 && ray.src.y <35 && ray.src.y > 30 && ray.src.x > 30 && ray.src.x < 35)
+    //    return Vec(0,0,1);
+    // return hit -> color;
 
-    if (++depth > reflect_cnt) return hit->emit;
+    if (++depth > REFLECT_CNT) return hit->emit;
 
     // point of contact
     Vec poc = intersection.poc;

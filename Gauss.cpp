@@ -21,7 +21,6 @@ Vec Gauss::solve(Vec c1, Vec c2, Vec c3, Vec b) {
     for (int i = 0; i < 3; i++)
         perm.push_back(i);
 
-    bool warn = false;
     // now we eliminate the j-th column
     for (int j = 0; j < 3; j++) {
         // first we use the partial pivoting strategy
@@ -38,8 +37,6 @@ Vec Gauss::solve(Vec c1, Vec c2, Vec c3, Vec b) {
 
         // Do the subtraction
         for (int i = j + 1; i < 3; i++) {
-            if (abs(a[perm[j]][j]) < 1e-10)
-                warn = true;
             double ratio = a[perm[i]][j] / a[perm[j]][j];
             a[perm[i]][j] = ratio;
             for (int jj = j + 1; jj < 3; jj++)
@@ -47,8 +44,6 @@ Vec Gauss::solve(Vec c1, Vec c2, Vec c3, Vec b) {
         }
     }
 
-    if (warn)
-        cerr <<"<     Warning!! Condition number might be large...      >" <<endl <<endl;
 	//forward substituion to solve Ly = b
 	vector<double> y;
 	for (int i = 0; i < 3; i++) {
