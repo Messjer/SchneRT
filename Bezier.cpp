@@ -4,8 +4,8 @@
 
 #include "Bezier.h"
 #include "Gauss.h"
-#define NEWTON_ITER 10
-#define NEWTON_ATTEMPT 1
+#define NEWTON_ITER 5
+#define NEWTON_ATTEMPT 10
 #define NEWTON_DELTA 5e-5
 
 using namespace std;
