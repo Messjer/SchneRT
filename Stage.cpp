@@ -71,7 +71,7 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
         return COLOR_BLACK;
 
     const Object *hit = intersection.hit;
-    return hit -> color;
+    //return hit -> color;
 
     if (++depth > reflect_cnt) return hit->emit;
 

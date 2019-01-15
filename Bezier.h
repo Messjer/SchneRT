@@ -14,9 +14,9 @@ namespace stage {
         BezierCurve() {}
         BezierCurve(std::vector<Vec> c_points) : c_points(c_points) {}
 
-        static Vec eval(BezierCurve curve, double t);
+        static Vec eval(const BezierCurve &curve, double t);
 
-        static Vec deri(BezierCurve curve, double t);
+        static Vec deri(const BezierCurve &curve, double t);
     };
 
     struct int4

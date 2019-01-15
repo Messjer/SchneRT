@@ -5,13 +5,13 @@
 #include "Bezier.h"
 #include "Gauss.h"
 #define NEWTON_ITER 20
-#define NEWTON_ATTEMPT 1
+#define NEWTON_ATTEMPT 10
 #define NEWTON_DELTA 5e-5
 
 using namespace std;
 using namespace stage;
 
-Vec BezierCurve::eval(BezierCurve curve, double t) {
+Vec BezierCurve::eval(const BezierCurve &curve, double t) {
     // bezier curve evaluation using de Casteljau's algo
     if (curve.c_points.size() == 1)
         return curve.c_points[0];
@@ -23,9 +23,9 @@ Vec BezierCurve::eval(BezierCurve curve, double t) {
     return eval(reduced, t);
 }
 
-Vec BezierCurve::deri(BezierCurve curve, double t) {
-    vector<Vec> new_points(curve.c_points.size() - 1);
+Vec BezierCurve::deri(const BezierCurve &curve, double t) {
     int size = curve.c_points.size();
+    vector<Vec> new_points(size - 1);
     for (int i = 0; i < size - 1 ; i++)
         new_points.push_back((curve.c_points[i + 1] - curve.c_points[i]) * (size - 1));
     BezierCurve reduced = BezierCurve(new_points);
@@ -67,7 +67,8 @@ Vec BezierRotational::eval(double u, double v) const {
 
 Vec BezierRotational::du(double u, double v) const {
     Vec deriv = BezierCurve::deri(curve, u);
-    return deriv.rotate(axis, 2 * PI * v);
+    deriv = deriv.rotate(axis, 2 * PI * v);
+    return deriv;
 }
 
 Vec BezierRotational::dv(Vec pt) const {
@@ -123,7 +124,7 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
         Vec du, dv, f;
 
         // first guess
-        X = Vec(with_box.t, 0.5, 0.5);
+        X = Vec(with_box.t, drand48(), drand48());
 
         for (int i = 0; i < NEWTON_ITER; i++) {
             // one iteration of newton's method
@@ -137,8 +138,8 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
             if (X[0] > EPS && X[1] > EPS && X[2] > EPS && X[1] < 1 - EPS && X[2] < 1 - EPS
                 && ((d_x).inf_norm() < NEWTON_DELTA)) {
                 found = true;
-                if (p.y < 35)
-                    cout <<p <<endl;
+                //if (p.y < 35)
+                    //cout <<p <<endl;
                 //cout <<p <<endl;
                 //cout <<src + dir * X[0] <<endl;
                 //cout <<"|||" <<endl;
@@ -157,8 +158,8 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
 
     if (ans_t < INF_D ) {
         rst.t = ans_t;
-        rst.type = dir.dot(rst.normal) > EPS ? INTO : OUTO;
         rst.normal = ans_du.cross(ans_dv).unit();
+        rst.type = dir.dot(rst.normal) > EPS ? INTO : OUTO;
         rst.normal = rst.normal * (rst.type == INTO ? 1 : -1);
         rst.poc = src + dir * rst.t;
         //cout <<rst.poc <<endl;

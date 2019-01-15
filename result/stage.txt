@@ -1,4 +1,4 @@
-reflect_cnt 2
+reflect_cnt 3
 
 eye
     pos 50 52 295.6
@@ -135,7 +135,6 @@ Bezier
     pos 30 30 30
     axis 0 1 0
     color 1 0.2 0.4
-    emit 12 12 12
     spec 1
 end
 
