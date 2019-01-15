@@ -29,7 +29,7 @@ namespace stage {
     class BezierRotational : public Object {
     private:
         const int NEWTON_ITER = 5;
-        const int NEWTON_ATTEMPT = 10;
+        const int NEWTON_ATTEMPT = 1;
         const double NEWTON_EPS = 0.05;
         const double NEWTON_DELTA = 0.05;
         Vec axis;
