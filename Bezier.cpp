@@ -199,14 +199,21 @@ namespace stage {
             else if (str == "color") fin >> b.color;
             else if (str == "axis") fin >> b.axis;
             else if (str == "emit") fin >> b.emit;
-            else {
+            else if (str == "AABB") {
+                fin >>b.b_box;
+            } else {
                 cerr <<string("Unrecognized field: ") + str + " for Bezier rotational!" <<endl;
                 exit(-1);
             }
         }
         for (int j = 0; j < b.n; j++)
             b.curve.c_points[j] = b.curve.c_points[j] * scale;
-        b.compute_b_box();
+        // use diff == 1 to signify enterd AABB
+        if (b.b_box.diff < EPS)
+            b.compute_b_box();
+        else {
+            b.b_box.shift(b.pos);
+        }
         return fin;
     }
 

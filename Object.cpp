@@ -72,7 +72,7 @@ namespace stage {
         string str;
         while(fin >> str) {
             if (str == "end") break;
-            if (str == "pos") fin >> s.pos;
+            if (str == "dist") fin >> s.dist;
             else if (str == "N") fin >> s.normalized;
             else if (str == "diff") fin >> s.diff;
             else if (str == "spec") fin >> s.spec;
@@ -84,8 +84,7 @@ namespace stage {
                 exit(-1);
             }
         }
-        s.dist = s.pos.norm();
-        s.normalized.unit();
+        s.set(s.dist, s.normalized.unit());
         return fin;
     }
 
@@ -103,7 +102,8 @@ namespace stage {
                     else
                         s.high[d] = s.faces[i].pos[d];
                 }
-            }
+            } else if (str == "low") fin >>s.low;
+            else if (str == "high") fin >>s.high;
             else if (str == "diff") fin >> s.diff;
             else if (str == "spec") fin >> s.spec;
             else if (str == "refr") fin >> s.refr;
@@ -113,6 +113,12 @@ namespace stage {
                 cerr <<string("Unrecognized field: ") + str + " for AABB!" <<endl;
                 exit(-1);
             }
+        }
+        // if pos is not specified (or 0,0,0), then use should enter faces
+        // otherwise we requir used to enter low & high
+        if (abs((s.pos - Vec(0,0,0)).inf_norm()) > EPS) {
+            s.make_faces();
+            s.shift(s.pos);
         }
         return fin;
     }
@@ -220,5 +226,16 @@ void AABBox::make_faces() {
             faces[i].set(low[i / 2], normal);
         else
             faces[i].set(high[i / 2], normal);
+    }
+}
+
+void AABBox::shift(const Vec &pt) {
+    for (int i = 0; i < 6; i++) {
+        Vec normal = Vec(0, 0, 0);
+        normal[i / 2] = 1;
+        if (i & 1)
+            faces[i].set(low[i / 2] + pos[i / 2], normal);
+        else
+            faces[i].set(high[i / 2] + pos[i / 2], normal);
     }
 }
