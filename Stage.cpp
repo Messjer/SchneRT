@@ -72,20 +72,10 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
 
     const Object *hit = intersection.hit;
 
-    if (hit -> get_type() == Object::BEZIER) {
-        //cout <<intersection.poc <<endl;
-        //exit(1);
-    }
-
     if (++depth > reflect_cnt) return hit->emit;
 
     // point of contact
     Vec poc = intersection.poc;
-
-    /* if (!(hit -> touched(poc))) {
-        cerr<< poc << " does not touch " <<(*hit) <<endl;
-        exit(-1);
-    } */
 
     Vec normal_orig, normal = intersection.normal;
     bool into = intersection.type == INTO;

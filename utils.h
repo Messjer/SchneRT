@@ -34,6 +34,7 @@ struct Vec {
     Vec operator*(const Vec &other) const { return {x*other.x,y*other.y,z*other.z}; }
     Vec& unit(){ return *this = *this * (1/norm()); }
     double norm() const { return sqrt(x*x+y*y+z*z); }
+    double inf_norm() const { return fmax(fmax(abs(x),abs(y)),abs(z));}
     double dot(const Vec &other) const { return x*other.x+y*other.y+z*other.z; }
     // cross product
     Vec cross(Vec &other) const {return {y*other.z-z*other.y,z*other.x-x*other.z,x*other.y-y*other.x};}

@@ -135,6 +135,7 @@ Bezier
     pos 30 30 30
     axis 0 0 1
     color 1 0.2 0.4
-    diff 1
+    spec 1
+    emit 12 12 12
 end
 

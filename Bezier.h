@@ -30,8 +30,7 @@ namespace stage {
     private:
         const int NEWTON_ITER = 5;
         const int NEWTON_ATTEMPT = 1;
-        const double NEWTON_EPS = 0.05;
-        const double NEWTON_DELTA = 0.05;
+        const double NEWTON_DELTA = 0.005;
         Vec axis;
         AABBox b_box;
         BezierCurve curve;
