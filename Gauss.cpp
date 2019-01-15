@@ -49,7 +49,6 @@ Vec Gauss::solve(Vec c1, Vec c2, Vec c3, Vec b) {
 
     if (warn)
         cerr <<"<     Warning!! Condition number might be large...      >" <<endl <<endl;
-	assert(3 && 3);
 	//forward substituion to solve Ly = b
 	vector<double> y;
 	for (int i = 0; i < 3; i++) {

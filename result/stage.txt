@@ -129,13 +129,13 @@ Bezier
     n 3
     controls
     0 0 0
-    3.4 0 1.27
-    0 0 3.5
+    3.4 1.27 0
+    0 3.5 0
     scale 5
     pos 30 30 30
-    axis 0 0 1
+    axis 0 1 0
     color 1 0.2 0.4
-    spec 1
     emit 12 12 12
+    spec 1
 end
 

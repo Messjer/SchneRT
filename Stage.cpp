@@ -71,6 +71,7 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
         return COLOR_BLACK;
 
     const Object *hit = intersection.hit;
+    return hit -> color;
 
     if (++depth > reflect_cnt) return hit->emit;
 
@@ -216,6 +217,7 @@ namespace stage {
                 exit(-1);
             }
         }
+        eye.dir.unit();
         eye.up = eye.dir.cross(eye.right);
         return fin;
     }

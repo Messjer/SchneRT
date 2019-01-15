@@ -4,6 +4,9 @@
 
 #include "Bezier.h"
 #include "Gauss.h"
+#define NEWTON_ITER 20
+#define NEWTON_ATTEMPT 1
+#define NEWTON_DELTA 5e-5
 
 using namespace std;
 using namespace stage;
@@ -21,8 +24,6 @@ Vec BezierCurve::eval(BezierCurve curve, double t) {
 }
 
 Vec BezierCurve::deri(BezierCurve curve, double t) {
-    if (curve.c_points.size() == 1)
-        return curve.c_points[0];
     vector<Vec> new_points(curve.c_points.size() - 1);
     int size = curve.c_points.size();
     for (int i = 0; i < size - 1 ; i++)
@@ -82,16 +83,16 @@ void BezierRotational::compute_b_box() {
         if (abs(curve.c_points[i][0]) > max_abs[0]) {
             max_abs[0] = abs(curve.c_points[i][0]);
         }
-        if (curve.c_points[i][2] < b_box.low[2])
-            b_box.low[2] = curve.c_points[i][2];
-        if (curve.c_points[i][2] > b_box.high[2])
-            b_box.high[2] = curve.c_points[i][2];
+        if (curve.c_points[i][1] < b_box.low[1])
+            b_box.low[1] = curve.c_points[i][1];
+        if (curve.c_points[i][1] > b_box.high[1])
+            b_box.high[1] = curve.c_points[i][1];
     }
     //cout <<max_abs[0];
     b_box.low[0] = -max_abs[0];
     b_box.high[0] = max_abs[0];
-    b_box.low[1] = -max_abs[0];
-    b_box.high[1] = max_abs[0];
+    b_box.low[2] = -max_abs[0];
+    b_box.high[2] = max_abs[0];
     for (int d = 0; d < 3; d++)
     {
         b_box.low[d] += pos[d];
@@ -115,13 +116,14 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
     // only if with_box is not miss will we use Newton's method
     Vec X;
 
-    // first guess
     // t, u, v respecitvely
     Vec src = ray.src, dir = ray.dir;
+    bool found = false;
     for (int q = 0; q < NEWTON_ATTEMPT; q++) {
-        bool found = false;
         Vec du, dv, f;
-        X = Vec(with_box.t, drand48(), drand48());
+
+        // first guess
+        X = Vec(with_box.t, 0.5, 0.5);
 
         for (int i = 0; i < NEWTON_ITER; i++) {
             // one iteration of newton's method
@@ -130,11 +132,16 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
             du = this->du(X[1], X[2]);
             dv = this->dv(p);
             // By Jd_x = -f, where d_x + X = next_X
-            Vec d_x = Gauss::solve(dir, du * (-1), dv * (-1), f);
-            X = X - d_x;
+            Vec d_x = Gauss::solve(dir * (-1) , du, dv, f);
+            X = X + d_x;
             if (X[0] > EPS && X[1] > EPS && X[2] > EPS && X[1] < 1 - EPS && X[2] < 1 - EPS
                 && ((d_x).inf_norm() < NEWTON_DELTA)) {
                 found = true;
+                if (p.y < 35)
+                    cout <<p <<endl;
+                //cout <<p <<endl;
+                //cout <<src + dir * X[0] <<endl;
+                //cout <<"|||" <<endl;
                 break;
             }
         }
@@ -144,13 +151,15 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
             ans_t = t;
             ans_du = du;
             ans_dv = dv;
+            break;
         }
     }
 
     if (ans_t < INF_D ) {
         rst.t = ans_t;
-        rst.type = dir.dot(ans_du * ans_dv) > EPS ? INTO : OUTO;
-        rst.normal = (rst.type == INTO ? ans_dv.cross(ans_du) : ans_du.cross(ans_dv)).unit();
+        rst.type = dir.dot(rst.normal) > EPS ? INTO : OUTO;
+        rst.normal = ans_du.cross(ans_dv).unit();
+        rst.normal = rst.normal * (rst.type == INTO ? 1 : -1);
         rst.poc = src + dir * rst.t;
         //cout <<rst.poc <<endl;
         rst.hit = this;

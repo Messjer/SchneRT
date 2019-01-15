@@ -21,7 +21,7 @@ typedef unsigned int uint;
 
 namespace stage {
     static const double EPS = 1e-6;
-    static const double INF_D = 1e20;
+    static const double INF_D = 1e9;
     static const double PI = acos(-1);
 }
 
