@@ -96,7 +96,7 @@ namespace stage {
         void set(double dist, Vec normalized) {
             int sign = dist > 0 ? 1 : -1;
             this->dist = dist * sign; this->normalized = normalized * (-sign);
-            this->pos = this->normalized * this -> dist;
+            this->pos = normalized * this -> dist;
         }
 
         friend std::istream &operator >>(std::istream &fin, Plane &s);
