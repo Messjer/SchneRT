@@ -136,7 +136,7 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
             Vec d_x = Gauss::solve(dir * (-1) , du, dv, f);
             X = X + d_x;
             if (X[0] > EPS && X[1] > EPS && X[2] > EPS && X[1] < 1 - EPS && X[2] < 1 - EPS
-                && ((d_x).inf_norm() < NEWTON_DELTA)) {
+                && ((f).inf_norm() < NEWTON_DELTA)) {
                 found = true;
                 //if (p.y < 35)
                     //cout <<p <<endl;
