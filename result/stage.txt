@@ -82,21 +82,21 @@ Plane
 end
 
 # Mirror Ball
-#Sphere
-#    rad 16.5
-#    pos 27 16.5 47
-#    color .999 .999 .999
-#    spec 1
-#end
+Sphere
+    rad 3
+    pos 30 73 40
+    color .999 .999 .999
+    spec 1
+end
 
 # Glass ball
-#Sphere
-#    rad 16.5
-#    pos 73 16.5 78
-#    color .999 .333 0
-#    refr 1
-#    n 1.5
-#end
+Sphere
+    rad 16.5
+    pos 73 16.5 78
+    color .999 .333 0
+    refr 1
+    n 1.5
+end
 
 # Light
 Sphere
@@ -116,7 +116,7 @@ Bezier
     -2.45 3.52 0
     0 3.5 0
     scale 20
-    pos 30 0 30
+    pos 30 0 40
     axis 0 1 0
     color 1 0.2 0.4
     diff 1
