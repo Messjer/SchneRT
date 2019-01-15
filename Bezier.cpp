@@ -4,6 +4,7 @@
 
 #include "Bezier.h"
 #include "Gauss.h"
+// ITER = 6 and ATTEMPT = 12 is good
 #define NEWTON_ITER 5
 #define NEWTON_ATTEMPT 10
 #define NEWTON_DELTA 5e-5
@@ -125,6 +126,8 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
 
         // first guess
         X = Vec(with_box.t, drand48(), drand48());
+        int cnt = 0; // number of increasing distance
+        double last_dist = INF_D;
 
         for (int i = 0; i < NEWTON_ITER; i++) {
             // one iteration of newton's method
@@ -135,14 +138,17 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
             // By -J(X - X0) = f
             Vec d_x = Gauss::solve(dir * (-1) , du, dv, f);
             X = X + d_x;
+            double dist = f.inf_norm();
+            if (last_dist < dist) {
+                cnt++;
+                if (cnt >= 2) {
+                    //cout <<"killed " << i <<endl;
+                    break;
+                }
+            } else cnt = 0;
             if (X[0] > EPS && X[1] > EPS && X[2] > EPS && X[1] < 1 - EPS && X[2] < 1 - EPS
-                && ((f).inf_norm() < NEWTON_DELTA)) {
+                && ((last_dist = dist) < NEWTON_DELTA)) {
                 found = true;
-                //if (p.y < 35)
-                    //cout <<p <<endl;
-                //cout <<p <<endl;
-                //cout <<src + dir * X[0] <<endl;
-                //cout <<"|||" <<endl;
                 break;
             }
         }
@@ -212,7 +218,7 @@ namespace stage {
         if (b.b_box.diff < EPS)
             b.compute_b_box();
         else {
-            b.b_box.shift(b.pos);
+            b.b_box.transform(b.pos, scale);
         }
         return fin;
     }

@@ -115,11 +115,11 @@ Bezier
     3.4 1.27 0
     -2.45 3.52 0
     0 3.5 0
-    scale 20
+    scale 5
     AABB
         pos 30 0 40
-        low 10 0 10
-        high 50 70.4 50
+        low -.875 0 -.875
+        high .875 3.52 .875
         diff 1
     end
     pos 30 0 40

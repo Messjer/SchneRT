@@ -89,6 +89,7 @@ namespace stage {
     }
 
     std::istream &operator >>(std::istream &fin, AABBox &s) {
+        double scale = 1;
         string str;
         while(fin >> str) {
             if (str == "end") break;
@@ -108,17 +109,18 @@ namespace stage {
             else if (str == "spec") fin >> s.spec;
             else if (str == "refr") fin >> s.refr;
             else if (str == "color") fin >> s.color;
+            else if (str == "scale") fin >> scale;
             else if (str == "emit") fin >> s.emit;
             else {
                 cerr <<string("Unrecognized field: ") + str + " for AABB!" <<endl;
                 exit(-1);
             }
         }
-        // if pos is not specified (or 0,0,0), then use should enter faces
-        // otherwise we requir used to enter low & high
-        if (abs((s.pos - Vec(0,0,0)).inf_norm()) > EPS) {
+        // if scale is 0, then user should enter faces
+        // otherwise we require used to enter low & high
+        if (scale != 1) {
             s.make_faces();
-            s.shift(s.pos);
+            s.transform(s.pos, scale);
         }
         return fin;
     }
@@ -212,7 +214,7 @@ Intersection AABBox::intersect(const Ray &ray) const {
 bool AABBox::contains(const Vec &pt) const {
     bool valid = true;
     for (int d = 0; d < 3; d++) {
-        if (pt[d] > high[d] + EPS || pt[d] < low[d] - EPS)
+        if (pt[d] > high[d] + pos[d] + EPS || pt[d] < low[d] + pos[d] - EPS)
             valid = false;
     }
     return valid;
@@ -229,7 +231,11 @@ void AABBox::make_faces() {
     }
 }
 
-void AABBox::shift(const Vec &pt) {
+void AABBox::transform(const Vec &pt, double scale) {
+    for (int i = 0; i < 3; i++) {
+        low[i] = low[i] * scale;
+        high[i] = high[i] * scale;
+    }
     for (int i = 0; i < 6; i++) {
         Vec normal = Vec(0, 0, 0);
         normal[i / 2] = 1;

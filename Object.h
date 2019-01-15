@@ -124,7 +124,7 @@ namespace stage {
 
         void make_faces();
 
-        void shift(const Vec &);
+        void transform(const Vec &pos, double scale);
 
         friend std::istream &operator >>(std::istream &fin, AABBox &s);
 
