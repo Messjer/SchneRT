@@ -82,21 +82,21 @@ Plane
 end
 
 # Mirror Ball
-Sphere
-    rad 6
-    pos 30 73 40
-    color .999 .999 .999
-    spec 1
-end
+#Sphere
+#    rad 6
+#    pos 30 73 40
+#    color .999 .999 .999
+#    spec 1
+#end
 
 # Glass ball
-Sphere
-    rad 16.5
-    pos 73 16.5 78
-    color .999 .333 0
-    refr 1
-    n 1.5
-end
+#Sphere
+#    rad 16.5
+#    pos 73 16.5 78
+#    color .999 .333 0
+#    refr 1
+#    n 1.5
+#end
 
 # Light
 Sphere
@@ -107,24 +107,45 @@ Sphere
 end
 
 # Bezier Rotational (manually entered AABB to speed up)
+#Bezier
+#    n 5
+#    controls
+#    0 0 0
+#    -3.58 0.12 0
+#    3.4 1.27 0
+#    -2.45 3.52 0
+#    0 3.5 0
+#    scale 5
+#    AABB
+#        pos 30 60 40
+#        low -.875 0 -.875
+#        high .875 3.52 .875
+#        diff 1
+#    end
+#    pos 30 60 40
+#    axis 0 1 0
+#    color 1 0.2 0.4
+#    emit 12 12 12
+#    refr 1
+#end
+
 Bezier
-    n 5
+    n 3
     controls
     0 0 0
-    -3.58 0.12 0
     3.4 1.27 0
-    -2.45 3.52 0
     0 3.5 0
     scale 5
     AABB
-        pos 30 0 40
-        low -.875 0 -.875
-        high .875 3.52 .875
+        pos 30 60 30
+        low -1.7 0 -1.7
+        high 1.7 3.52 1.7
         diff 1
     end
-    pos 30 0 40
+    pos 30 60 30
     axis 0 1 0
     color 1 0.2 0.4
     diff 1
 end
+
 

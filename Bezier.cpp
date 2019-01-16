@@ -155,6 +155,9 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
         double t = X[0];
         if (found && t < ans_t) {
             //cout <<t <<endl;
+            Vec p = eval(X[1], X[2]);
+            du = this->du(X[1], X[2]);
+            dv = this->dv(p);
             ans_t = t;
             ans_du = du;
             ans_dv = dv;
@@ -165,7 +168,7 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
     if (ans_t < INF_D ) {
         rst.t = ans_t;
         rst.normal = ans_du.cross(ans_dv).unit();
-        rst.type = dir.dot(rst.normal) > EPS ? INTO : OUTO;
+        rst.type = dir.dot(rst.normal) > EPS ? OUTO : INTO;
         rst.normal = rst.normal * (rst.type == INTO ? 1 : -1);
         rst.poc = src + dir * rst.t;
         //cout <<rst.poc <<endl;

@@ -72,6 +72,7 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
     // if (depth == 0 && ray.src.y <35 && ray.src.y > 30 && ray.src.x > 30 && ray.src.x < 35)
     //    return Vec(0,0,1);
     // return hit -> color;
+    // return hit -> color;
 
     if (++depth > REFLECT_CNT) return hit->emit;
 
@@ -87,7 +88,9 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
 
     /* compute the shadow rays */
 
-    Vec color = hit -> emit;
+    Vec color;
+    color = hit -> emit;
+    //if (depth) color = hit -> emit;
 
     // refraction
     if (hit->refr > EPS) {
