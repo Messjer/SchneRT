@@ -207,6 +207,7 @@ namespace stage {
             else if (str == "color") fin >> b.color;
             else if (str == "axis") fin >> b.axis;
             else if (str == "emit") fin >> b.emit;
+            else if (str == "n") fin >> b.n;
             else if (str == "AABB") {
                 fin >>b.b_box;
             } else {
