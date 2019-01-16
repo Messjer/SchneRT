@@ -103,6 +103,7 @@ Sphere
     rad 600
     pos 50 681.33 81.6
     emit 12 12 12
+    color .75 .75 .75
     diff 1
 end
 

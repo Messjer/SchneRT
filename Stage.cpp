@@ -90,7 +90,9 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
 
     Vec color;
     color = hit -> emit;
-    //if (depth) color = hit -> emit;
+    if (depth == 1 && hit -> emit [0] > EPS)
+        color = hit -> color * .25;
+
 
     // refraction
     if (hit->refr > EPS) {
