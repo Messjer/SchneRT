@@ -199,7 +199,7 @@ Intersection AABBox::intersect(const Ray &ray) const {
     HitType type =  contains(ray.src) ? OUTO : INTO;
     for (int i = 0; i < 6; i++) {
         Intersection tmp = faces[i].intersect(ray);
-        if (tmp.type != MISS && tmp.t < rst.t) {
+        if (tmp.type != MISS && tmp.t > EPS && tmp.t < rst.t) {
             Vec poc = tmp.poc;
             if (contains(poc)) {
                 rst = tmp;
