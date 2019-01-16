@@ -235,7 +235,12 @@ namespace stage {
         fout << "Axis : " <<o.axis;
         fout <<endl;
         fout << "Bounding box is " <<o.b_box <<endl;
-
+        fout << "     --------    " <<endl;
+        fout << "Color : " << o.color << " , ";
+        fout << "Emit : " << o.emit << " , ";
+        fout << "Refr : " << o.refr << " , ";
+        fout << "Spec : " << o.spec << " , ";
+        fout << "Diff : " << o.diff;
         return fout;
     }
 }
