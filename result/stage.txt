@@ -54,7 +54,7 @@ end
 Plane
     dist 0
     N 0 0 1
-    color .25 .25 .25
+    color .75 .75 .75
     diff 1
 end
 
@@ -129,6 +129,7 @@ end
 #    refr 1
 #end
 
+# lightbulb
 Bezier
     order 3
     controls
@@ -149,4 +150,12 @@ Bezier
     n 1.5
 end
 
-
+# Pillar (order : right, left, up, down, front, back)
+AABB
+    scale 3
+    pos 30 0 30
+    low -1 0 -1
+    high 1 18 1
+    color .25 .55 .45
+    diff 1
+end
