@@ -155,7 +155,7 @@ AABB
     scale 3
     pos 30 0 30
     low -1 0 -1
-    high 1 18 1
+    high 1 20 1
     color .25 .55 .45
     diff 1
 end
