@@ -5,3 +5,7 @@ down:
 run:
 	cd result
 	./SchneRT
+build:
+	cd result
+	cmake -DCMAKE_BUILD_TYPE=Release ..
+	make

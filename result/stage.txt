@@ -138,14 +138,14 @@ Bezier
     scale 5
     AABB
         pos 30 60 30
-        low -1.7 0 -1.7
-        high 1.7 3.52 1.7
+        low -1.8 0 -1.8
+        high 1.8 3.52 1.8
         diff 1
     end
     pos 30 60 30
     axis 0 1 0
-    color 1 0.2 0.4
-    diff 1
+    color .99 .99 .99
+    refr
 end
 
 

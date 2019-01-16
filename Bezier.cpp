@@ -118,7 +118,7 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
     // only if with_box is not miss will we use Newton's method
     Vec X;
 
-    // t, u, v respecitvely
+    // t, u, v respectively
     Vec src = ray.src, dir = ray.dir;
     bool found = false;
     for (int q = 0; q < NEWTON_ATTEMPT; q++) {
