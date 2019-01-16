@@ -108,7 +108,7 @@ end
 
 # Bezier Rotational (manually entered AABB to speed up)
 #Bezier
-#    n 5
+#    order 5
 #    controls
 #    0 0 0
 #    -3.58 0.12 0
@@ -130,7 +130,7 @@ end
 #end
 
 Bezier
-    n 3
+    order 3
     controls
     0 0 0
     3.4 1.27 0

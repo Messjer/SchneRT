@@ -5,7 +5,7 @@
 #include "Stage.h"
 #include "Object.h"
 #include "Bezier.h"
-#define REFLECT_CNT 5
+#define REFLECT_CNT 3
 using namespace stage;
 using namespace std;
 

@@ -28,6 +28,7 @@ namespace stage {
 
     class BezierRotational : public Object {
     private:
+        int order;
         Vec axis;
         AABBox b_box;
         BezierCurve curve;

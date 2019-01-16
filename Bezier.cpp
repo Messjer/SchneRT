@@ -161,7 +161,6 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
             ans_t = t;
             ans_du = du;
             ans_dv = dv;
-            break;
         }
     }
 
@@ -185,17 +184,17 @@ namespace stage {
         double scale = 1;
         while (fin >> str) {
             if (str == "end") break;
-            if (str == "n") fin >> b.n;
+            if (str == "order") fin >> b.order;
             else if (str == "pos") fin >> b.pos;
             else if (str == "controls") {
-                if (b.n == 0) {
+                if (b.order == 0) {
                     cerr <<string("Please first specify number of control points!") <<endl;
                     exit(-1);
                 }
                 vector<Vec> upoints;
                 Vec point;
                 upoints.clear();
-                for (int j = 0; j < b.n; j++) {
+                for (int j = 0; j < b.order; j++) {
                     fin >> point;
                     upoints.push_back(point);
                 }
@@ -215,7 +214,7 @@ namespace stage {
                 exit(-1);
             }
         }
-        for (int j = 0; j < b.n; j++)
+        for (int j = 0; j < b.order; j++)
             b.curve.c_points[j] = b.curve.c_points[j] * scale;
         // use diff == 1 to signify enterd AABB
         if (b.b_box.diff < EPS)
