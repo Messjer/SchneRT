@@ -145,7 +145,7 @@ Bezier
     pos 30 60 30
     axis 0 1 0
     color .99 .99 .99
-    refr
+    refr 1
 end
 
 

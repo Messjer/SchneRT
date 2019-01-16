@@ -6,6 +6,4 @@ run:
 	cd result
 	./SchneRT
 build:
-	cd result
-	cmake -DCMAKE_BUILD_TYPE=Release ..
-	make
+	cd result; cmake -DCMAKE_BUILD_TYPE=Release ..; make
