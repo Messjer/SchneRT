@@ -2,8 +2,6 @@ SCHNEll Ray Tracer
 ------------------
 Ray Tracer project for THU Course `Advanced Computer Graphics`
 
-*Current implementation is an OOP version of Smallpt.*
-
 ## Features
 - Monte Carlo Path Tracing
     - Specular Reflection
@@ -12,7 +10,9 @@ Ray Tracer project for THU Course `Advanced Computer Graphics`
 - Supported objects:
     - Spheres
     - Planes
-    - Axis-alined boxes (untested)
+    - Axis-aligned boxes
+    - Bezier rotational surface (*WARNING* can be devastatingly slow)
+        - intersection solved using Newton's method, attempt = 10, iteration = 5
 - Natively supports smooth shadows and caustics by MCPT.
 - Cornell Box Scene modified from `Smallpt`
 - Scene specification referenced from Raina Tam's implementation (private conversation).
