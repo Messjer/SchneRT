@@ -138,6 +138,34 @@ namespace stage {
         fout << "Diff : " << s.diff;
         return fout;
     };
+
+    std::istream &operator >>(std::istream &fin, LimitedPlane &s) {
+        string str;
+        while(fin >> str) {
+            if (str == "end") break;
+            if (str == "plane") fin >> s.plane;
+            else if (str == "low") fin >>s.low;
+            else if (str == "high") fin >>s.high;
+            else {
+                cerr <<string("Unrecognized field: ") + str + " for Limited Plane!" <<endl;
+                exit(-1);
+            }
+        }
+        s.diff = s.plane.diff;
+        s.refr = s.plane.refr;
+        s.spec = s.plane.spec;
+        s.color = s.plane.color;
+        s.emit = s.plane.emit;
+        return fin;
+    }
+
+    std::ostream &operator <<(std::ostream &fout, const LimitedPlane &s) {
+        fout <<"Limited Plane:" <<endl;
+        fout <<"Underlying plane is "<<s.plane <<endl;
+        fout <<"low is " <<s.low <<endl;
+        fout <<"high is " <<s.high <<endl;
+        return fout;
+    }
 }
 
 
@@ -244,4 +272,23 @@ void AABBox::transform(const Vec &pt, double scale) {
         else
             faces[i].set(high[i / 2] + pos[i / 2], normal);
     }
+}
+
+Intersection LimitedPlane::intersect(const Ray &ray) const {
+    Intersection tmp = plane.intersect(ray);
+    if (tmp.type == MISS || !contains(tmp.poc)) {
+        tmp.type = MISS;
+        return tmp;
+    }
+    tmp.hit = this;
+    return tmp;
+}
+
+bool LimitedPlane::contains(const Vec &pt) const {
+    bool valid = true;
+    for (int d = 0; d < 3; d++) {
+        if (pt[d] > high[d] + pos[d] + EPS || pt[d] < low[d] + pos[d] - EPS)
+            valid = false;
+    }
+    return valid;
 }

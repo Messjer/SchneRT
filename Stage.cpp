@@ -5,7 +5,7 @@
 #include "Stage.h"
 #include "Object.h"
 #include "Bezier.h"
-#define REFLECT_CNT 3
+#define REFLECT_CNT 4
 using namespace stage;
 using namespace std;
 
@@ -34,6 +34,10 @@ Stage::Stage(string fname) {
             objects.push_back(obj);
         } else if (str == "AABB") {
             auto *obj = new AABBox();
+            fin >>(*obj);
+            objects.push_back(obj);
+        } else if (str == "LimitedPlane") {
+            auto *obj = new LimitedPlane();
             fin >>(*obj);
             objects.push_back(obj);
         } else {
@@ -90,8 +94,8 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
 
     Vec color;
     color = hit -> emit;
-    if (depth == 1 && hit -> emit [0] > EPS)
-        color = hit -> color * .25;
+    //if (depth == 1 && hit -> emit [0] > EPS)
+    //    color = hit -> color * .25;
 
 
     // refraction

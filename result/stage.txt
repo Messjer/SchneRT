@@ -1,5 +1,5 @@
 eye
-    pos 50 52 295.6
+    pos 50 52 297.4
     dir 0 -0.042612 -1
     r 1 0 0
     dist 140
@@ -39,7 +39,7 @@ Plane
     dist -1
     N 1 0 0
     color .75 .25 .25
-    diff 1
+    spec 1
 end
 
 # Right wall
@@ -55,13 +55,26 @@ Plane
     dist 0
     N 0 0 1
     color .75 .75 .75
-    diff 1
+    spec 1
+end
+
+# Middle-front wall
+LimitedPlane
+    plane
+        dist 85
+        N 0 0 1
+        color .9 .9 .0
+        spec 1
+    end
+    low 50 0 85
+    high 99 81.6 85
 end
 
 # Front 
 Plane
     dist 170
     N 0 0 1
+    color .666 .333 0
     diff 1
 end
 
@@ -91,17 +104,26 @@ end
 
 # Glass ball
 Sphere
-    rad 16.5
-    pos 73 16.5 78
+    rad 8
+    pos 50 8 100
     color .999 .999 .999
     refr 1
     n 1.5
 end
 
-# Light
+# Light back
 Sphere
     rad 600
-    pos 50 681.33 81.6
+    pos 78 681.33 40
+    emit 12 12 12
+    color .75 .75 .75
+    diff 1
+end
+
+# Light front
+Sphere
+    rad 599.9
+    pos 78 681.33 110
     emit 12 12 12
     color .75 .75 .75
     diff 1
@@ -123,7 +145,7 @@ end
 #        high .875 3.52 .875
 #        diff 1
 #    end
-#    pos 30 60 40
+#    pos 30 0 40
 #    axis 0 1 0
 #    color 1 0.2 0.4
 #    emit 12 12 12
@@ -141,7 +163,7 @@ Bezier
     AABB
         pos 30 60 30
         low -1.8 0 -1.8
-        high 1.8 3.52 1.8
+        high 1.8 3.50 1.8
         diff 1
     end
     pos 30 60 30

@@ -40,7 +40,7 @@ namespace stage {
     class Object {
     public:
         enum Type {
-            SPHERE, PLANE, BEZIER, BOX
+            SPHERE, PLANE, BEZIER, BOX, LIMITED_PLANE
         };
 
         double n;
@@ -131,6 +131,21 @@ namespace stage {
         friend std::ostream &operator <<(std::ostream &fout, const AABBox &s);
 
         friend class BezierRotational;
+    };
+
+    // Planes are recommended to be axis-aligned for displaying textures
+    class LimitedPlane: public Object{
+        Vec low, high;
+        Plane plane;
+    public:
+        Type get_type() const override { return Object::LIMITED_PLANE; }
+        Intersection intersect(const Ray &ray) const override;
+
+        friend std::istream &operator >>(std::istream &fin, LimitedPlane &s);
+
+        friend std::ostream &operator <<(std::ostream &fout, const LimitedPlane &s);
+
+        bool contains(const Vec &pt) const;
     };
 }
 
