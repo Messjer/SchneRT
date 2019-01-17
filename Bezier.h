@@ -40,7 +40,6 @@ namespace stage {
         Vec du(double u, double v) const;
         Vec dv(Vec pt) const;
         void genObj(int nu, int nv);
-        void compute_b_box();
         friend std::istream &operator>>(std::istream &fin, BezierRotational &b);
         friend std::ostream &operator<<(std::ostream &fout, const BezierRotational &o);
     };

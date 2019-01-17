@@ -79,32 +79,6 @@ Vec BezierRotational::dv(Vec pt) const {
     return d;
 }
 
-void BezierRotational::compute_b_box() {
-    double max_abs[3] = {};
-    for (int i = 0; i < curve.c_points.size(); i++) {
-        if (abs(curve.c_points[i][0]) > max_abs[0]) {
-            max_abs[0] = abs(curve.c_points[i][0]);
-        }
-        if (curve.c_points[i][1] < b_box.low[1])
-            b_box.low[1] = curve.c_points[i][1];
-        if (curve.c_points[i][1] > b_box.high[1])
-            b_box.high[1] = curve.c_points[i][1];
-    }
-    //cout <<max_abs[0];
-    b_box.low[0] = -max_abs[0];
-    b_box.high[0] = max_abs[0];
-    b_box.low[2] = -max_abs[0];
-    b_box.high[2] = max_abs[0];
-    for (int d = 0; d < 3; d++)
-    {
-        b_box.low[d] += pos[d];
-        b_box.high[d] += pos[d];
-    }
-    b_box.color = Vec(1,0,0);
-    b_box.diff = 1;
-    b_box.make_faces();
-}
-
 Intersection BezierRotational::intersect(const Ray &ray) const {
     Intersection rst;
 
@@ -219,7 +193,8 @@ namespace stage {
             b.curve.c_points[j] = b.curve.c_points[j] * scale;
         // use diff == 1 to signify enterd AABB
         if (b.b_box.diff < EPS)
-            b.compute_b_box();
+            //b.compute_b_box();
+            ;
         else {
             b.b_box.transform(b.pos, scale);
         }
