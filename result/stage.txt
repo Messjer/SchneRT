@@ -71,7 +71,7 @@ LimitedPlane
     plane
         dist 85
         N 0 0 1
-        color .9 .9 .0
+        color .9 .3 .0
         spec 1
     end
     low 50 0 85
@@ -155,8 +155,9 @@ Bezier
     end
     pos 30 0 70
     axis 0 1 0
-    color .6 .4 .4
-    diff 1
+    color .8 .4 .4
+    refr 1
+    n 1.5
 end
 
 # lightbulb
@@ -168,12 +169,12 @@ Bezier
     0 3.5 0
     scale 5
     AABB
-        pos 10 60 10
+        pos 2 60 40
         low -1.8 0 -1.8
         high 1.8 3.50 1.8
         diff 1
     end
-    pos 10 60 10
+    pos 2 60 40
     axis 0 1 0
     color .999 .999 .999
     refr 1
@@ -183,7 +184,7 @@ end
 # Pillar (order : right, left, up, down, front, back)
 AABB
     scale 3
-    pos 10 0 10
+    pos 2 0 40
     low -1 0 -1
     high 1 20 1
     color .25 .55 .45
