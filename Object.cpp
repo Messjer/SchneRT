@@ -109,6 +109,7 @@ namespace stage {
                 }
             } else if (str == "low") fin >>s.low;
             else if (str == "high") fin >>s.high;
+            else if (str == "n") fin >>s.n;
             else if (str == "diff") fin >> s.diff;
             else if (str == "spec") fin >> s.spec;
             else if (str == "refr") fin >> s.refr;

@@ -1,5 +1,5 @@
 samp 20
-resl 1
+resl 3
 eye
     pos 50 52 297.4
     dir 0 -0.042612 -1
@@ -110,13 +110,13 @@ Plane
     diff 1
 end
 
-# Mirror Ball
-Sphere
-    rad 3.5
-    pos 30 24.5 70
-    color .999 .999 .999
-    spec 1
-end
+## Mirror Ball
+#Sphere
+#    rad 3.5
+#    pos 30 24.5 70
+#    color .999 .999 .999
+#    spec 1
+#end
 
 # Glass ball
 Sphere
@@ -192,6 +192,31 @@ Bezier
     n 1.5
 end
 
+# cross (vertical)
+AABB
+    scale 1.2
+    pos 67.6 57 116
+    low -1 -5 -1
+    high 1 5 1
+    color .8 .8 .8
+    refr 1
+    n 1.5
+end
+
+# cross (horizontal)
+AABB
+    scale 1.2
+    pos 70.6 57 116
+    low -10 -1 -1
+    high 3 1 1
+    color .8 .8 .8
+    refr 1
+    n 1.5
+end
+
+
+#TODO fix rotational
+#TODO make a better scale
 ## lightbulb
 #Bezier
 #    order 3
@@ -213,7 +238,7 @@ end
 #    n 1.5
 #end
 
-# Pillar (order : right, left, up, down, front, back)
+# Pillar
 AABB
     scale 3
     pos 2 0 40
