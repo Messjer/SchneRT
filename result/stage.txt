@@ -1,5 +1,3 @@
-samp 20
-resl 5
 eye
     pos 50 52 297.4
     dir 0 -0.042612 -1
@@ -53,16 +51,11 @@ Sphere
 end
 
 # Right wall
-LimitedPlane
-    plane
-        dist 99
-        N 1 0 0
-        color .25 .25 .75
-        diff 1
-    end
-    texture texture/checker.png
-    low 99 0 0
-    high 99 81.6 170
+Plane
+    dist 99
+    N 1 0 0
+    color .25 .25 .75
+    diff 1
 end
 
 # Back wall

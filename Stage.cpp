@@ -95,8 +95,8 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
 
     /* compute the shadow rays */
 
-    Vec color;//, hit_color = hit -> get_color(poc);
-    Vec hit_color = hit -> color;
+    Vec color, hit_color = hit -> get_color(poc);
+    //Vec hit_color = hit -> color;
     color = hit -> emit;
     //if (depth == 1 && hit -> emit [0] > EPS)
     //    color = hit -> color * .25;
