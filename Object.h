@@ -4,7 +4,7 @@
 
 #ifndef SCHNERT_OBJECT_H
 #define SCHNERT_OBJECT_H
-#include "utils.h"
+#include "Canvas.h"
 
 namespace stage {
     enum HitType {
@@ -47,12 +47,17 @@ namespace stage {
 
         Vec pos, emit, color, absorb;
         double diff, refr, spec;
+        Canvas *texture;
 
-        Object(): diff(0), refr(0), spec(0) {}
+        Object(): diff(0), refr(0), spec(0), texture(NULL) {}
 
-        virtual ~Object() = default;
+        virtual ~Object() {
+            delete texture;
+        }
 
         virtual Type get_type() const = 0;
+
+        virtual Vec get_color(const Vec &pt) const { return color; }
 
         virtual Intersection intersect(const Ray &ray) const = 0;
 
@@ -80,7 +85,7 @@ namespace stage {
 
     class Plane : public Object {
         // used pos to store vector to the plane from (0,0,0)
-    private:
+    public:
         // normalized normal
         Vec normalized;
         double dist;
@@ -104,6 +109,8 @@ namespace stage {
         friend std::ostream &operator <<(std::ostream &fout, const Plane &s);
 
         friend class AABBox;
+
+        friend class LimitedPlane;
     };
 
     class AABBox : public Object {
@@ -135,7 +142,7 @@ namespace stage {
 
     // Planes are recommended to be axis-aligned for displaying textures
     class LimitedPlane: public Object{
-        Vec low, high;
+        Vec low, high, width;
         Plane plane;
     public:
         Type get_type() const override { return Object::LIMITED_PLANE; }
@@ -146,6 +153,11 @@ namespace stage {
         friend std::ostream &operator <<(std::ostream &fout, const LimitedPlane &s);
 
         bool contains(const Vec &pt) const;
+
+        Vec get_color(const Vec &pt) const override;
+
+        // get offset in dimension d
+        double get_offset(const Vec &pt, int d) const;
     };
 }
 

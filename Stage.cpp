@@ -17,31 +17,34 @@ Stage::Stage(string fname) {
         if (str.length() <= 0 || str[0] == '#') {
             fin.ignore(256, '\n');
             continue;
+        } else if (str == "samp") {
+            fin >> samp;
+        } else if (str == "resl") {
+            fin >> resl;
         } else if (str == "eye") {
-            fin >>eye;
+            fin >> eye;
         } else if (str == "Sphere") {
             auto *s = new Sphere();
-            fin >>(*s);
+            fin >> (*s);
             objects.push_back(s);
         } else if (str == "Plane") {
             auto *obj = new Plane();
-            fin >>(*obj);
+            fin >> (*obj);
             objects.push_back(obj);
         } else if (str == "Bezier") {
             auto *obj = new BezierRotational();
-            fin >>(*obj);
-            obj -> genObj(100, 100);
+            fin >> (*obj);
             objects.push_back(obj);
         } else if (str == "AABB") {
             auto *obj = new AABBox();
-            fin >>(*obj);
+            fin >> (*obj);
             objects.push_back(obj);
         } else if (str == "LimitedPlane") {
             auto *obj = new LimitedPlane();
-            fin >>(*obj);
+            fin >> (*obj);
             objects.push_back(obj);
         } else {
-            cerr <<std::string("Unrecognized object : ") + str <<endl;
+            cerr << std::string("Unrecognized object : ") + str << endl;
             exit(-1);
         }
 
@@ -92,7 +95,8 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
 
     /* compute the shadow rays */
 
-    Vec color;
+    Vec color;//, hit_color = hit -> get_color(poc);
+    Vec hit_color = hit -> color;
     color = hit -> emit;
     //if (depth == 1 && hit -> emit [0] > EPS)
     //    color = hit -> color * .25;
@@ -107,7 +111,7 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
         Vec tdir = (ray.dir * nnt - normal * (ddn * nnt + sqrt(cos2t))).unit();
         double a = nt - nc, b = nt + nc, R0 = a * a / (b * b), c = 1 - (into ? -ddn : tdir.dot(normal_orig));
         double Re = R0 + (1 - R0) * c * c * c * c * c, Tr = 1 - Re, P = .25 + .5 * Re, RP = Re / P, TP = Tr / (1 - P);
-        Vec to_add = hit->color;
+        Vec to_add = hit_color;
         if (depth < 2)
             to_add = to_add * radiance(reflect, depth, Xi) * Re + radiance(Ray(poc, tdir), depth, Xi) * Tr;
         else if (erand48(Xi) < P)
@@ -120,13 +124,13 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
     // specular
     if (hit->spec > EPS) {
         Ray reflect = Ray(poc, (ray.dir - normal * 2 * normal.dot(ray.dir)).unit());
-        color = color + hit->color * radiance(reflect, depth, Xi) * hit -> spec;
+        color = color + hit_color * radiance(reflect, depth, Xi) * hit -> spec;
     }
 
     // diffuse
     if (hit->diff > EPS) {
         Ray shadow = Ray(poc, random_hemi_ray_cos(normal, Xi));
-        color = color + hit->color * radiance(shadow, depth, Xi) * hit -> diff;
+        color = color + hit_color * radiance(shadow, depth, Xi) * hit -> diff;
     }
 
     return color;
@@ -151,16 +155,16 @@ Vec Stage::random_hemi_ray_cos(const Vec &normal, unsigned short *Xi) {
 }
 
 // path tracing core algorithm
-Canvas* Stage::ray_trace(int h1, int h2, int w1, int w2, int samp, double resl) {
+Canvas * Stage::ray_trace(int h1, int h2, int w1, int w2) {
     assert(w2 > w1 && w1 >= 0 && w2 <= eye.w && h2 > h1 && h1 >=0 && h2 <= eye.h);
-    int newY = (h2 - h1)/resl, newX = (w2 - w1)/resl;
+    int new_y = (h2 - h1)/resl, new_x = (w2 - w1)/resl;
     auto *rst = new Canvas((h2 - h1)/resl, (w2 - w1)/resl);
 
     // loop over every pixel
     Vec light;
     bool done = false;
 #pragma omp parallel for schedule(dynamic, 1) private(light) shared(done)
-    for (int yi = 0; yi < newY; yi++) {  // rows
+    for (int yi = 0; yi < new_y; yi++) {  // rows
         // random state Xi
         unsigned short Xi[3]={0,0,0};
         int y = h1 + yi * resl;
@@ -171,7 +175,7 @@ Canvas* Stage::ray_trace(int h1, int h2, int w1, int w2, int samp, double resl) 
             done = true;
         }
         fprintf(stderr,"\rRendering (%d spp) %5.2f%%",samp,pctg);
-        for (int xi = 0; xi < newX; xi++) {  // cols
+        for (int xi = 0; xi < new_x; xi++) {  // cols
             int x = w1 + xi * resl;
             light = COLOR_BLACK;
             for (int s  = 0; s < samp; s++) {

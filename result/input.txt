@@ -1,3 +1,5 @@
+samp 20
+resl 1
 eye
     pos 50 52 297.4
     dir 0 -0.042612 -1
@@ -51,11 +53,16 @@ Sphere
 end
 
 # Right wall
-Plane
-    dist 99
-    N 1 0 0
-    color .25 .25 .75
-    diff 1
+LimitedPlane
+    plane
+        dist 99
+        N 1 0 0
+        color .25 .25 .75
+        diff 1
+    end
+    texture texture/checker.png
+    low 99 0 0
+    high 99 81.6 170
 end
 
 # Back wall
@@ -137,49 +144,49 @@ Sphere
     diff 1
 end
 
-# Bezier Rotational (manually entered AABB to speed up)
-Bezier
-    order 5
-    controls
-    0 0 0
-    -3.58 0.12 0
-    3.4 1.27 0
-    -2.45 3.52 0
-    0 3.5 0
-    scale 6
-    AABB
-        pos 30 0 70
-        low -.875 0 -.875
-        high .875 3.5 .875
-        diff 1
-    end
-    pos 30 0 70
-    axis 0 1 0
-    color .8 .4 .4
-    refr 1
-    n 1.5
-end
+## Bezier Rotational (manually entered AABB to speed up)
+#Bezier
+#    order 5
+#    controls
+#    0 0 0
+#    -3.58 0.12 0
+#    3.4 1.27 0
+#    -2.45 3.52 0
+#    0 3.5 0
+#    scale 6
+#    AABB
+#        pos 30 0 70
+#        low -.875 0 -.875
+#        high .875 3.5 .875
+#        diff 1
+#    end
+#    pos 30 0 70
+#    axis 0 1 0
+#    color .8 .4 .4
+#    refr 1
+#    n 1.5
+#end
 
-# lightbulb
-Bezier
-    order 3
-    controls
-    0 0 0
-    3.4 1.27 0
-    0 3.5 0
-    scale 6
-    AABB
-        pos 2 60 40
-        low -1.8 0 -1.8
-        high 1.8 3.50 1.8
-        diff 1
-    end
-    pos 2 60 40
-    axis 0 1 0
-    color .999 .999 .999
-    refr 1
-    n 1.5
-end
+## lightbulb
+#Bezier
+#    order 3
+#    controls
+#    0 0 0
+#    3.4 1.27 0
+#    0 3.5 0
+#    scale 6
+#    AABB
+#        pos 2 60 40
+#        low -1.8 0 -1.8
+#        high 1.8 3.50 1.8
+#        diff 1
+#    end
+#    pos 2 60 40
+#    axis 0 1 0
+#    color .999 .999 .999
+#    refr 1
+#    n 1.5
+#end
 
 # Pillar (order : right, left, up, down, front, back)
 AABB

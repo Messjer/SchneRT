@@ -7,9 +7,9 @@ int main(int argc, char **argv) {
     int samp, resl;
     ifstream fin("render.config");
     fin >>samp >>resl;
-    stage::Stage stg("stage.txt");
+    stage::Stage stg("input.txt");
     cout <<stg;
-    Canvas *canvas = stg.ray_trace(samp, resl);
+    Canvas *canvas = stg.ray_trace();
     canvas->draw_to_file("try.png");
     delete canvas;
     return 0;

@@ -33,33 +33,6 @@ Vec BezierCurve::deri(const BezierCurve &curve, double t) {
     return eval(reduced, t);
 }
 
-// this function is copied from Rain's PPM, used for debug only
-void BezierRotational::genObj(int nu, int nv)
-{
-    float du = 1.0f / (nu - 1), dv = 1.0f / (nv - 1);
-    vector<Vec> points(0);
-    vector<int4> meshes(0);
-    int pid = 0;
-    float u, v;
-    int i, j;
-    for (u = 0.0f, i = 0; i <= nu; u += du, i++)
-    {
-        for (v = 0.0f, j = 0; j <= nv; v += dv, j++)
-        {
-            points.push_back(eval(u, v));
-            pid++;
-            if (i != 0 && j != 0)
-                meshes.push_back(int4(pid - nv - 1, pid - nv, pid, pid - 1));
-        }
-    }
-    FILE *fp = fopen("BezierMesh.obj", "w");
-    for (int i = 0; i < int(points.size()); i++)
-        fprintf(fp, "v %f %f %f\n", points[i].x, points[i].y, points[i].z);
-    for (int i = 0; i < int(meshes.size()); i++)
-        fprintf(fp, "f %d %d %d %d\n", meshes[i].a, meshes[i].b, meshes[i].c, meshes[i].d);
-    fclose(fp);
-}
-
 Vec BezierRotational::eval(double u, double v) const {
     Vec point = BezierCurve::eval(curve, u);
     point = point.rotate(axis, 2 * PI * v) + pos;

@@ -23,6 +23,9 @@ namespace stage {
             case Object::BOX:
                 fout << (*((AABBox *) &o)) <<endl;
                 break;
+            case Object::LIMITED_PLANE:
+                fout << (*((LimitedPlane *) &o)) <<endl;
+                break;
         }
         return fout;
     }
@@ -37,6 +40,7 @@ namespace stage {
         fout << "Diff : " << s.diff;
         return fout;
     }
+
     std::istream &operator >>(std::istream &fin, Sphere &s) {
         string str;
         while(fin >> str) {
@@ -146,11 +150,20 @@ namespace stage {
             if (str == "plane") fin >> s.plane;
             else if (str == "low") fin >>s.low;
             else if (str == "high") fin >>s.high;
+            else if (str == "texture") {
+                s.texture = new Canvas();
+                fin >>str;
+                s.texture->read_png(str);
+            }
             else {
                 cerr <<string("Unrecognized field: ") + str + " for Limited Plane!" <<endl;
                 exit(-1);
             }
         }
+        for (int d = 0; d < 3; d++)
+            if(abs(s.plane.normalized[d]) < EPS) {
+                s.width[d] = s.high[d] - s.low[d];
+            }
         s.diff = s.plane.diff;
         s.refr = s.plane.refr;
         s.spec = s.plane.spec;
@@ -164,6 +177,7 @@ namespace stage {
         fout <<"Underlying plane is "<<s.plane <<endl;
         fout <<"low is " <<s.low <<endl;
         fout <<"high is " <<s.high <<endl;
+        fout <<"width is " <<s.width <<endl;
         return fout;
     }
 }
@@ -291,4 +305,23 @@ bool LimitedPlane::contains(const Vec &pt) const {
             valid = false;
     }
     return valid;
+}
+
+Vec LimitedPlane::get_color(const Vec &pt) const {
+    // only axis-aligen textures are supported currently
+    if (texture != nullptr) {
+        double x, y;
+        for (int d = 0; d < 3; d++) {
+            if (abs(abs(plane.normalized[d]) - 1) < EPS) {
+                x = get_offset(pt, (d + 1) % 3);
+                y = get_offset(pt, (d + 2) % 3);
+            }
+        }
+        return texture -> get_color(y, x);
+    } else
+        return color;
+}
+
+double LimitedPlane::get_offset(const Vec &pt, int d) const {
+    return (pt[d] - low[d]) / width[d];
 }

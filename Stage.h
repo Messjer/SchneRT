@@ -25,18 +25,19 @@ namespace stage {
     };
 
     class Stage {
+        int samp, resl;
     public:;
         Stage(std::string description);
         ~Stage();
 
-        Canvas *ray_trace(int samp = 200, double resl = 1) { return ray_trace(0, eye.h, 0, eye.w, samp, resl); }
+        Canvas *ray_trace() { return ray_trace(0, eye.h, 0, eye.w); }
 
         /* Perform raytracing and output a Canvas
          * path tracing core algorithm
          * @Params: 0 <= w1 <= w2 <= eye.w
          * @Params: 0 <= h1 <= h2 <= eye.h
          * @Return: A *Canvas* of the output range, only specified rectangle areas is rendered */
-        Canvas *ray_trace(int h1, int h2, int w1, int w2, int samp, double resl);
+        Canvas *ray_trace(int h1, int h2, int w1, int w2);
 
     // private:
         Camera eye;
