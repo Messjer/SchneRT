@@ -78,6 +78,18 @@ void BezierRotational::compute_b_box() {
     b_box.make_faces();
 }
 
+double BezierRotational::compute_angle(const Vec &pt) const {
+    Vec pt_pos = pt - pos;
+    Vec flat = pt_pos - axis * pt_pos.dot(axis);
+    //cout <<flat <<endl;
+    double x = flat.dot(right);
+    double y = flat.dot(up);
+    double rst = atan2(y, x);
+    if (rst < EPS) rst = rst + 2 * PI;
+    //cout <<rst <<endl;
+    return rst / (2 * PI);
+}
+
 Intersection BezierRotational::intersect(const Ray &ray) const {
     Intersection rst;
 
@@ -98,7 +110,9 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
         Vec du, dv, f;
 
         // first guess
-        X = Vec(with_box.t, drand48(), drand48());
+        //double v0 = compute_angle(with_box.poc) + (drand48() - .5) * .5;
+        double v0 = drand48();
+        X = Vec(with_box.t, drand48(), v0);
         int cnt = 0; // number of increasing distance
         double last_dist = INF_D;
 
@@ -176,6 +190,7 @@ namespace stage {
             else if (str == "diff") fin >> b.diff;
             else if (str == "scale") fin >> scale;
             else if (str == "spec") fin >> b.spec;
+            else if (str == "right") fin >> b.right;
             else if (str == "refr") fin >> b.refr;
             else if (str == "color") fin >> b.color;
             else if (str == "axis") fin >> b.axis;
@@ -188,6 +203,7 @@ namespace stage {
                 exit(-1);
             }
         }
+        b.up = b.axis.cross(b.right);
         for (int j = 0; j < b.order; j++)
             b.curve.c_points[j] = b.curve.c_points[j] * scale;
         // use diff == 1 to signify enterd AABB

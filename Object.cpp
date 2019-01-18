@@ -225,7 +225,7 @@ Intersection Plane::intersect(const Ray &ray) const {
     double dot = normalized.dot(ray.dir);
     if(fabs(dot) < EPS) return rst;
     double t = -(dist + normalized.dot(ray.src)) / dot;
-    if (t > EPS)
+    if (t > 2 * EPS)
     {
         double sgn = dot > EPS ? -1 : 1;
         rst.t = t;
