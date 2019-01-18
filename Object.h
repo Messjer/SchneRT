@@ -144,6 +144,7 @@ namespace stage {
     class LimitedPlane: public Object{
         Vec low, high, width;
         Plane plane;
+        double scaled = 0;
     public:
         Type get_type() const override { return Object::LIMITED_PLANE; }
         Intersection intersect(const Ray &ray) const override;
@@ -158,6 +159,8 @@ namespace stage {
 
         // get offset in dimension d
         double get_offset(const Vec &pt, int d) const;
+
+        double get_offset_unscaled(const Vec &pt, int d) const;
     };
 }
 

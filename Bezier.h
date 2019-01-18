@@ -19,13 +19,6 @@ namespace stage {
         static Vec deri(const BezierCurve &curve, double t);
     };
 
-    struct int4
-    {
-        int a, b, c, d;
-        int4() :a(0), b(0), c(0), d(0) {}
-        int4(int a_, int b_, int c_, int d_) :a(a_), b(b_), c(c_), d(d_) {}
-    };
-
     class BezierRotational : public Object {
     private:
         int order;
@@ -39,6 +32,7 @@ namespace stage {
         Vec eval(double u, double v) const;
         Vec du(double u, double v) const;
         Vec dv(Vec pt) const;
+        void compute_b_box();
         friend std::istream &operator>>(std::istream &fin, BezierRotational &b);
         friend std::ostream &operator<<(std::ostream &fout, const BezierRotational &o);
     };

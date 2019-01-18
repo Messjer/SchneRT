@@ -4,9 +4,6 @@
 using namespace std;
 
 int main(int argc, char **argv) {
-    int samp, resl;
-    ifstream fin("render.config");
-    fin >>samp >>resl;
     stage::Stage stg("input.txt");
     cout <<stg;
     Canvas *canvas = stg.ray_trace();

@@ -7,6 +7,7 @@
 #include "png++/require_color_space.hpp"
 
 void Canvas::draw_to_file(const std::string &file) {
+    //std::cout <<"JDLKS" <<std::endl;
     png::image< png::rgb_pixel > img(w,h);
     for (size_t y = 0; y < img.get_height(); ++y)
     {

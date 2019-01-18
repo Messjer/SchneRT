@@ -150,6 +150,7 @@ namespace stage {
             if (str == "plane") fin >> s.plane;
             else if (str == "low") fin >>s.low;
             else if (str == "high") fin >>s.high;
+            else if (str == "scaled") fin >>s.scaled;
             else if (str == "texture") {
                 s.texture = new Canvas();
                 fin >>str;
@@ -310,18 +311,28 @@ bool LimitedPlane::contains(const Vec &pt) const {
 Vec LimitedPlane::get_color(const Vec &pt) const {
     // only axis-aligen textures are supported currently
     if (texture != nullptr) {
-        double x, y;
-        for (int d = 0; d < 3; d++) {
+        for (int d = 0; d < 3; d++)
             if (abs(abs(plane.normalized[d]) - 1) < EPS) {
-                x = get_offset(pt, (d + 1) % 3);
-                y = get_offset(pt, (d + 2) % 3);
+                if (scaled == 0) {
+                    double x, y;
+                    x = get_offset(pt, (d + 1) % 3);
+                    y = get_offset(pt, (d + 2) % 3);
+                    return texture->get_color(y, x);
+                } else {
+                    int x, y;
+                    x = get_offset_unscaled(pt, (d + 1) % 3) * scaled;
+                    y = get_offset_unscaled(pt, (d + 2) % 3) * scaled;
+                    return texture->get_color(y, x);
+                }
             }
-        }
-        return texture -> get_color(y, x);
     } else
         return color;
 }
 
 double LimitedPlane::get_offset(const Vec &pt, int d) const {
     return (pt[d] - low[d]) / width[d];
+}
+
+double LimitedPlane::get_offset_unscaled(const Vec &pt, int d) const {
+    return (pt[d] - low[d]);
 }

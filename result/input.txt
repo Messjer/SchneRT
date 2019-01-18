@@ -1,5 +1,5 @@
 samp 20
-resl 5
+resl 1
 eye
     pos 50 52 297.4
     dir 0 -0.042612 -1
@@ -52,7 +52,7 @@ Sphere
     color .75 .25 .25
 end
 
-# Right wall
+# Right wall (13 square checker)
 LimitedPlane
     plane
         dist 99
@@ -60,6 +60,7 @@ LimitedPlane
         color .25 .25 .75
         diff 1
     end
+    scaled 7.5
     texture texture/checker.png
     low 99 0 0
     high 99 81.6 170
@@ -166,6 +167,30 @@ end
 #    refr 1
 #    n 1.5
 #end
+
+# Bezier Rotational (manually entered AABB to speed up)
+Bezier
+    order 5
+    controls
+    0 0 0
+    0.12 -3.58 0
+    -1.27 3.4 0
+    -3.52 -2.45 0
+    -3.5 0 0
+    scale 7.4
+    AABB
+        pos 99 57 116
+        low -3.5 -.9 -.9
+        high 0 .9 .9
+        diff 1
+        color 0 0 .75
+    end
+    pos 99 57 116
+    axis 1 0 0
+    color .8 .4 .4
+    refr 1
+    n 1.5
+end
 
 ## lightbulb
 #Bezier

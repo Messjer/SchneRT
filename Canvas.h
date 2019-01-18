@@ -31,7 +31,7 @@ public:
     void draw(int y, int x, const Vec &color) {
         colors[coord(y, x)] = color;
     }
-    Vec get_color(int y, int x) { return colors[y * w + x]; }
+    Vec get_color(int y, int x) { if (y < 0) y = 0; if (x < 0) x = 0; y = y % h; x = x % w; return colors[y * w + x]; }
     Vec get_color(double y, double x) { int yy = clamp(y) * h; int xx = clamp(x) * w; return get_color(yy, xx); }
     void draw_to_file(const std::string &file);
     double clamp(double x, double l, double h) { return (x > h? h : (x < l ? l : x)); }
