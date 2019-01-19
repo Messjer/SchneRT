@@ -1,5 +1,5 @@
-samp 50
-resl 15
+samp 20
+resl 5
 eye
     pos 50 52 297.4
     dir 0 -0.042612 -1
