@@ -166,31 +166,31 @@ AABB
     spec 1
 end
 
-## Chess (right) (manually entered AABB to speed up)
-#Bezier
-#    order 5
-#    controls
-#    0 0 0
-#    0.12 3.58 0
-#    -1.27 -3.4 0
-#    -3.52 2.45 0
-#    -3.5 0 0
-#    scale 7.4
-#    right 0 1 0
-#    AABB
-#        pos 99 57 116
-#        low -3.5 -.9 -.9
-#        high 0 .9 .9
-#        diff 1
-#        color 0 0 .75
-#    end
-#    pos 99 57 116
-#    axis -1 0 0
-#    color .8 .4 .4
-#    absorb .98 .95 .95
-#    refr 1
-#    n 1.5
-#end
+# Chess (right) (manually entered AABB to speed up)
+Bezier
+    order 5
+    controls
+    0 0 0
+    0.12 3.58 0
+    -1.27 -3.4 0
+    -3.52 2.45 0
+    -3.5 0 0
+    scale 7.4
+    right 0 1 0
+    AABB
+        pos 99 57 116
+        low -3.5 -.9 -.9
+        high 0 .9 .9
+        diff 1
+        color 0 0 .75
+    end
+    pos 99 57 116
+    axis -1 0 0
+    color .8 .4 .4
+    absorb .98 .95 .95
+    refr 1
+    n 1.5
+end
 
 # lightbulb
 Sphere

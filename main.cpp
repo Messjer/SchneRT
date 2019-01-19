@@ -11,7 +11,9 @@ int main(int argc, char **argv) {
         name = "try.png";
     stage::Stage stg("input.txt");
     cout <<stg;
-    Canvas *canvas = stg.ray_trace();
+    Canvas *canvas = stg.ray_trace(282 + 19,350,807 + 83,960);
+    //Canvas *canvas = stg.ray_trace(282,350,807,960);
+    //Canvas *canvas = stg.ray_trace();
     canvas->draw_to_file(name);
     delete canvas;
     return 0;
