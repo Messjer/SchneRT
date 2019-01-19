@@ -209,8 +209,8 @@ Bezier
     pos 2 60 40
     right 1 0 0
     axis 0 1 0
-    color .99 .99 .99
-    absorb .99 .99 .99
+    color 1 1 1
+    absorb 1 1 1
     refr 1
     n 1.5
 end
