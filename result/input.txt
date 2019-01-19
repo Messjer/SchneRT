@@ -1,4 +1,4 @@
-samp 1300
+samp 1250
 resl 1
 eye
     pos 50 52 297.4
