@@ -1,5 +1,5 @@
-samp 5
-resl 10
+samp 20
+resl 5
 eye
     pos 50 52 297.4
     dir 0 -0.042612 -1
@@ -125,7 +125,6 @@ Bezier
     pos 99 57 116
     axis -1 0 0
     color .8 .4 .4
-    absorb .98 .95 .95
     refr 1
     n 1.5
 end
@@ -164,10 +163,10 @@ Bezier
         high 1.8 3.50 1.8
         diff 1
     end
+    right 1 0 0
     pos 2 60 40
     axis 0 1 0
     color .999 .999 .999
-    absorb 1 1 1
     refr 1
     n 1.5
 end

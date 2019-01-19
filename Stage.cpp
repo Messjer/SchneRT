@@ -114,7 +114,7 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
         double Re = R0 + (1 - R0) * c * c * c * c * c, Tr = 1 - Re, P = .25 + .5 * Re, RP = Re / P, TP = Tr / (1 - P);
         Vec to_add = hit_color;
         Vec alpha = {1,1,1};
-        if (!into)
+        if (!into && hit -> get_type() != Object::BEZIER)
             alpha = hit->absorb.exp(intersection.t);
         if (depth < 2)
             to_add = to_add * radiance(reflect, depth, Xi) * Re + radiance(trans, depth, Xi) * Tr * alpha;
