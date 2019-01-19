@@ -113,6 +113,7 @@ namespace stage {
             else if (str == "diff") fin >> s.diff;
             else if (str == "spec") fin >> s.spec;
             else if (str == "refr") fin >> s.refr;
+            else if (str == "absorb") fin >> s.absorb;
             else if (str == "color") fin >> s.color;
             else if (str == "scale") fin >> scale;
             else if (str == "emit") fin >> s.emit;
