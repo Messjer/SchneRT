@@ -134,38 +134,38 @@ end
 # Disk (\)
 HoledDisk
     plane
-        dist -1
-        N 0.686229 0.727385 0
+        dist 40
+        N 0.686229  0.537151  -0.490467
         color .6 .99 .6
         spec 1
     end
-    axis -1 0 0
-    theta 0.8
-    pos 46 34 99.9975
-    rad_in 15
-    rad_out 17
+    axis 0 1 0
+    theta 0.5
+    pos 48 34 99.9975
+    rad_in 13
+    rad_out 16
 end
 
-## cross (vertical)
-#AABB
-#    scale 1.2
-#    pos 65 56.9 116
-#    low -1 -5 -1
-#    high 1 5 1
-#    color .6 .6 .6
-#    spec 1
-#end
-#
-## cross (horizontal)
-#AABB
-#    scale 1.2
-#    pos 70.6 56.9 116
-#    low -10 -1 -1
-#    high 3 1 1
-#    color .6 .6 .6
-#    spec 1
-#end
-#
+# cross (vertical)
+AABB
+    scale 1.2
+    pos 65 56.9 116
+    low -1 -5 -1
+    high 1 5 1
+    color .6 .6 .6
+    spec 1
+end
+
+# cross (horizontal)
+AABB
+    scale 1.2
+    pos 70.6 56.9 116
+    low -10 -1 -1
+    high 3 1 1
+    color .6 .6 .6
+    spec 1
+end
+
 ## Chess (right) (manually entered AABB to speed up)
 #Bezier
 #    order 5
@@ -191,8 +191,8 @@ end
 #    refr 1
 #    n 1.5
 #end
-#
-## lightbulb
+
+# lightbulb
 Sphere
     rad 57
     pos 2 68 40
@@ -200,32 +200,32 @@ Sphere
     spec 1
 end
 
-## step (main)
-#AABB
-#    scale 1.2
-#    pos 99 0 85
-#    low -10 0 0
-#    high 0 10 30
-#    color .15 .15 .15
-#    diff 1
-#end
-#
-## step
-#AABB
-#    scale 1.2
-#    pos 99 12 85
-#    low -5 0 0
-#    high 0 5 30
-#    color .2 .15 .15
-#    diff 1
-#end
-#
-## step
-#AABB
-#    scale 1.2
-#    pos 87 0 85
-#    low -5 0 0
-#    high 0 5 30
-#    color .1 .15 .15
-#    diff 1
-#end
+# step (main)
+AABB
+    scale 1.2
+    pos 99 0 85
+    low -10 0 0
+    high 0 10 30
+    color .15 .15 .15
+    diff 1
+end
+
+# step
+AABB
+    scale 1.2
+    pos 99 12 85
+    low -5 0 0
+    high 0 5 30
+    color .2 .15 .15
+    diff 1
+end
+
+# step
+AABB
+    scale 1.2
+    pos 87 0 85
+    low -5 0 0
+    high 0 5 30
+    color .1 .15 .15
+    diff 1
+end
