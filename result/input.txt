@@ -1,5 +1,5 @@
-samp 100
-resl 1
+samp 50
+resl 15
 eye
     pos 50 52 297.4
     dir 0 -0.042612 -1
@@ -116,12 +116,16 @@ Sphere
     n 1.5
 end
 
-# Glass ball light
-Sphere
-    rad 1
-    pos 50 8 100
-    emit .8 .8 .8
-    diff 1
+# Light left
+LimitedPlane
+    plane
+        dist -7
+        N 1 0 0
+        emit 6 2 2
+        diff 1
+    end
+    low -7 -5 99
+    high -7 15 109
 end
 
 # Light back
@@ -141,8 +145,6 @@ Sphere
     color .75 .75 .75
     diff 1
 end
-
-
 
 # cross (vertical)
 AABB
