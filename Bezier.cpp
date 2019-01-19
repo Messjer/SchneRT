@@ -89,10 +89,12 @@ double BezierRotational::compute_angle(const Vec &pt) const {
     return rst / (2 * PI);
 }
 
-Intersection BezierRotational::intersect(const Ray &ray) const {
+Intersection BezierRotational::intersect(const Ray &ray, bool with_BB) const {
     Intersection rst;
 
-    Intersection with_box = b_box.intersect(ray);
+    Intersection with_box = b_box.intersect(ray, false);
+
+    if (with_BB) return with_box;
 
     if (with_box.type == MISS) return rst;
 

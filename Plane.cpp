@@ -93,7 +93,7 @@ namespace stage {
     };
 }
 
-Intersection Plane::intersect(const Ray &ray) const {
+Intersection Plane::intersect(const Ray &ray, bool with_BB) const {
     Intersection rst;
     double dot = normalized.dot(ray.dir);
     if(fabs(dot) < EPS) return rst;
@@ -111,11 +111,11 @@ Intersection Plane::intersect(const Ray &ray) const {
         return rst;
 }
 
-Intersection AABBox::intersect(const Ray &ray) const {
+Intersection AABBox::intersect(const Ray &ray, bool with_BB) const {
     Intersection rst;
     HitType type =  contains(ray.src) ? OUTO : INTO;
     for (int i = 0; i < 6; i++) {
-        Intersection tmp = faces[i].intersect(ray);
+        Intersection tmp = faces[i].intersect(ray, false);
         if (tmp.type != MISS && tmp.t > EPS && tmp.t < rst.t) {
             Vec poc = tmp.poc;
             if (contains(poc)) {

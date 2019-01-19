@@ -59,7 +59,7 @@ namespace stage {
 
         virtual Vec get_color(const Vec &pt) const { return color; }
 
-        virtual Intersection intersect(const Ray &ray) const = 0;
+        virtual Intersection intersect(const Ray &ray, bool with_BB) const = 0;
 
         friend std::ostream &operator <<(std::ostream &fout, const Object &o);
     };
@@ -74,7 +74,7 @@ namespace stage {
 
         Type get_type() const override { return Object::SPHERE; }
 
-        Intersection intersect(const Ray &ray) const override;
+        Intersection intersect(const Ray &ray, bool with_BB) const override;
 
         Vec normal(const Vec &pt) const;
 

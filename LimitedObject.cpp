@@ -119,8 +119,8 @@ namespace stage {
     }
 }
 
-Intersection Rectangle::intersect(const Ray &ray) const {
-    Intersection tmp = plane.intersect(ray);
+Intersection Rectangle::intersect(const Ray &ray, bool with_BB) const {
+    Intersection tmp = plane.intersect(ray, false);
     if (tmp.type == MISS || !contains(tmp.poc)) {
         tmp.type = MISS;
         return tmp;
@@ -171,8 +171,8 @@ double Rectangle::get_offset_unscaled(const Vec &pt, int d) const {
 }
 
 
-Intersection Disk::intersect(const Ray &ray) const {
-    Intersection tmp = plane.intersect(ray);
+Intersection Disk::intersect(const Ray &ray, bool with_BB) const {
+    Intersection tmp = plane.intersect(ray, false);
     if (tmp.type == MISS || !contains(tmp.poc)) {
         tmp.type = MISS;
         return tmp;
@@ -185,8 +185,8 @@ bool Disk::contains(const Vec &pt) const {
     return (pt - pos).norm() <= rad;
 }
 
-Intersection HoledDisk::intersect(const Ray &ray) const {
-    Intersection tmp = plane.intersect(ray);
+Intersection HoledDisk::intersect(const Ray &ray, bool with_BB) const {
+    Intersection tmp = plane.intersect(ray, false);
     //return tmp;
     if (tmp.type == MISS || !contains(tmp.poc)) {
         tmp.type = MISS;

@@ -29,7 +29,7 @@ namespace stage {
         BezierCurve curve;
     public:
         BezierRotational() {};
-        Intersection intersect(const Ray &) const override;
+        Intersection intersect(const Ray &, bool with_BB) const override;
         Type get_type() const override { return BEZIER; };
         Vec eval(double u, double v) const;
         Vec du(double u, double v) const;

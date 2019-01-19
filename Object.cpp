@@ -72,7 +72,7 @@ namespace stage {
 }
 
 
-Intersection Sphere::intersect(const stage::Ray &ray) const {
+Intersection Sphere::intersect(const Ray &ray, bool with_BB) const {
     Intersection rst;
     // Solve (td + src - pos)^2 = R^2
     // i.e. t^2 d.d + 2t(src - pos).d + (src - pos).(src - pos) = R^2

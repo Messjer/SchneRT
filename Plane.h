@@ -20,7 +20,7 @@ namespace stage {
 
         Type get_type() const override { return Object::PLANE; }
 
-        Intersection intersect(const Ray &ray) const override;
+        Intersection intersect(const Ray &ray, bool with_BB) const override;
 
         void set(double dist, Vec normalized) {
             int sign = dist > 0 ? 1 : -1;
@@ -49,7 +49,7 @@ namespace stage {
 
         Type get_type() const override { return Object::BOX; }
 
-        Intersection intersect(const Ray &ray) const override;
+        Intersection intersect(const Ray &ray, bool with_BB) const override;
 
         bool contains(const Vec &pt) const;
 

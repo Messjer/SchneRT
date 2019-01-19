@@ -71,11 +71,14 @@ Stage::~Stage() {
 Intersection Stage::intersect(const Ray &ray) {
     Intersection rst;
     for (int i = 0; i < objects.size(); i++) {
-        Intersection tmp = objects[i] -> intersect(ray);
+        Intersection tmp = objects[i]->intersect(ray, true);
         if (tmp.type != MISS && tmp.t < rst.t) {
             rst = tmp;
         }
     }
+    // try to speed up
+    if (rst.hit -> get_type() == Object::BEZIER)
+        rst = rst.hit -> intersect(ray, false);
     return rst;
 }
 

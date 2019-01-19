@@ -15,7 +15,7 @@ namespace stage {
         double scaled = 0;
     public:
         Type get_type() const override { return Object::RECT; }
-        Intersection intersect(const Ray &ray) const override;
+        Intersection intersect(const Ray &ray, bool with_BB) const override;
 
         friend std::istream &operator >>(std::istream &fin, Rectangle &s);
 
@@ -36,7 +36,7 @@ namespace stage {
         double rad;
     public:
         Type get_type() const override { return Object::DISK; }
-        Intersection intersect(const Ray &ray) const override;
+        Intersection intersect(const Ray &ray, bool with_BB) const override;
 
         friend std::istream &operator >>(std::istream &fin, Disk &s);
 
@@ -50,7 +50,7 @@ namespace stage {
         double rad_in, rad_out;
     public:
         Type get_type() const override { return Object::HOLED_DISK; }
-        Intersection intersect(const Ray &ray) const override;
+        Intersection intersect(const Ray &ray, bool with_BB) const override;
 
         friend std::istream &operator >>(std::istream &fin, HoledDisk &s);
 
