@@ -108,8 +108,8 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
         Vec du, dv, f;
 
         // first guess
-        //double v0 = compute_angle(with_box.poc) + (drand48() - .5) * .2;
-        double v0 = drand48();
+        double v0 = compute_angle(with_box.poc) + (drand48() - .5) * .2;
+        //double v0 = drand48();
         if (v0 > 1) v0 = v0 - 1;
         if (v0 < EPS) v0 = v0 + 1;
         X = Vec(with_box.t, drand48(), v0);
