@@ -139,7 +139,7 @@ end
 ## cross (vertical)
 #AABB
 #    scale 1.2
-#    pos 65 56.7 116
+#    pos 65 56.9 116
 #    low -1 -5 -1
 #    high 1 5 1
 #    color .6 .6 .6
@@ -149,7 +149,7 @@ end
 ## cross (horizontal)
 #AABB
 #    scale 1.2
-#    pos 70.6 56.7 116
+#    pos 70.6 56.9 116
 #    low -10 -1 -1
 #    high 3 1 1
 #    color .6 .6 .6
@@ -175,7 +175,7 @@ end
 #    -1.27 -3.4 0
 #    -3.52 2.45 0
 #    -3.5 0 0
-#    scale 6
+#    scale 7.4
 #    right 0 1 0
 #    AABB
 #        pos 99 57 116
