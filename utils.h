@@ -37,6 +37,7 @@ struct Vec {
     double inf_norm() const { return fmax(fmax(abs(x),abs(y)),abs(z));}
     double dot(const Vec &other) const { return x*other.x+y*other.y+z*other.z; }
     // cross product
+    Vec exp(double t) const { return {pow(x, t), pow(y, t), pow(z, t)}; }
     Vec cross(Vec &other) const {return {y*other.z-z*other.y,z*other.x-x*other.z,x*other.y-y*other.x};}
     Vec rotate(Vec axis, double theta) const {
         // the following function implements a 3d rotation

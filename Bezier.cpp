@@ -86,7 +86,6 @@ double BezierRotational::compute_angle(const Vec &pt) const {
     double y = flat.dot(up);
     double rst = atan2(y, x);
     if (rst < EPS) rst = rst + 2 * PI;
-    //cout <<rst <<endl;
     return rst / (2 * PI);
 }
 
@@ -110,8 +109,11 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
         Vec du, dv, f;
 
         // first guess
-        //double v0 = compute_angle(with_box.poc) + (drand48() - .5) * .5;
-        double v0 = drand48();
+        double v0 = compute_angle(with_box.poc) + (drand48() - .5) * .2;
+        //double v0 = drand48();
+        if (v0 > 1) v0 = v0 - 1;
+        if (v0 < EPS) v0 = v0 + 1;
+        //double v0 = drand48();
         X = Vec(with_box.t, drand48(), v0);
         int cnt = 0; // number of increasing distance
         double last_dist = INF_D;

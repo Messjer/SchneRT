@@ -109,15 +109,18 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
         if ((cos2t = 1 - nnt * nnt * (1 - ddn * ddn)) < 0)    // Total internal reflection
             return hit->emit + hit->color * (radiance(reflect, depth, Xi));
         Vec tdir = (ray.dir * nnt - normal * (ddn * nnt + sqrt(cos2t))).unit();
+        Ray trans = Ray(poc, tdir);
         double a = nt - nc, b = nt + nc, R0 = a * a / (b * b), c = 1 - (into ? -ddn : tdir.dot(normal_orig));
         double Re = R0 + (1 - R0) * c * c * c * c * c, Tr = 1 - Re, P = .25 + .5 * Re, RP = Re / P, TP = Tr / (1 - P);
         Vec to_add = hit_color;
+        //Vec alpha = hit->absorb.exp(intersection.t);
+        Vec alpha = {1,1,1};
         if (depth < 2)
-            to_add = to_add * radiance(reflect, depth, Xi) * Re + radiance(Ray(poc, tdir), depth, Xi) * Tr;
+            to_add = to_add * radiance(reflect, depth, Xi) * Re + radiance(trans, depth, Xi) * Tr * alpha;
         else if (erand48(Xi) < P)
             to_add = to_add * radiance(reflect, depth, Xi) * RP;
         else
-            to_add = to_add * radiance(Ray(poc, tdir), depth, Xi) * TP;
+            to_add = to_add * radiance(trans, depth, Xi) * TP * alpha;
         color = color + to_add;
     }
 

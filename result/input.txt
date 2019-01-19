@@ -1,5 +1,5 @@
-samp 1500
-resl 1
+samp 20
+resl 2
 eye
     pos 50 52 297.4
     dir 0 -0.042612 -1
@@ -92,14 +92,25 @@ end
 #    spec 1
 #end
 
-# Glass ball
-Sphere
-    rad 8
-    pos 50 8 100
-    color .999 .999 .999
-    refr 1
-    n 1.5
-end
+## Glass ball
+#Sphere
+#    rad 8
+#    pos 50 8 100
+#    color .999 .999 .999
+#    refr 1
+#    n 1.5
+#end
+
+
+## Glass ball
+#Sphere
+#    rad 1000.5
+#    pos 50 -1000 100
+#    color .999 .999 .999a
+#    absorb .9 1 1
+#    refr 1
+#    n 1.5
+#end
 
 # Light back
 Sphere
@@ -156,11 +167,11 @@ Bezier
     order 5
     controls
     0 0 0
-    0.12 -3.58 0
-    -1.27 3.4 0
-    -3.52 -2.45 0
+    0.12 3.58 0
+    -1.27 -3.4 0
+    -3.52 2.45 0
     -3.5 0 0
-    scale 7.4
+    scale 3
     right 0 1 0
     AABB
         pos 99 57 116
@@ -176,58 +187,58 @@ Bezier
     n 1.5
 end
 
-# cross (vertical)
-AABB
-    scale 1.2
-    pos 65 56.5 116
-    low -1 -5 -1
-    high 1 5 1
-    color .8 .2 .1
-    refr 1
-    n 1.5
-end
-
-# cross (horizontal)
-AABB
-    scale 1.2
-    pos 70.6 56.5 116
-    low -10 -1 -1
-    high 3 1 1
-    color .8 .2 .1
-    refr 1
-    n 1.5
-end
+## cross (vertical)
+#AABB
+#    scale 1.2
+#    pos 65 56.5 116
+#    low -1 -5 -1
+#    high 1 5 1
+#    color .8 .2 .1
+#    refr 1
+#    n 1.5
+#end
+#
+## cross (horizontal)
+#AABB
+#    scale 1.2
+#    pos 70.6 56.5 116
+#    low -10 -1 -1
+#    high 3 1 1
+#    color .8 .2 .1
+#    refr 1
+#    n 1.5
+#end
 
 
 #TODO fix rotational
 #TODO make a better scale
 # lightbulb
-Bezier
-    order 3
-    controls
-    0 0 0
-    3.4 1.27 0
-    0 3.5 0
-    scale 6
-    AABB
-        pos 2 60 40
-        low -1.8 0 -1.8
-        high 1.8 3.50 1.8
-        diff 1
-    end
-    pos 2 60 40
-    axis 0 1 0
-    color .999 .999 .999
-    refr 1
-    n 1.5
-end
+#Bezier
+#    order 3
+#    controls
+#    0 0 0
+#    3.4 1.27 0
+#    0 3.5 0
+#    scale 6
+#    AABB
+#        pos 2 60 40
+#        low -1.8 0 -1.8
+#        high 1.8 3.50 1.8
+#        diff 1
+#    end
+#    pos 2 60 40
+#    axis 0 1 0
+#    color .999 .999 .999
+#    refr 1
+#    n 1.5
+#end
 
-# Pillar
-AABB
-    scale 3
-    pos 2 0 40
-    low -1 0 -1
-    high 1 20 1
-    color .25 .55 .45
-    diff 1
-end
+## Pillar
+#AABB
+#    scale 3
+#    pos 2 0 40
+#    low -1 0 -1
+#    high 1 20 1
+#    color .25 .55 .45
+#    diff 1
+#end
