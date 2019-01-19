@@ -168,6 +168,7 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
         rst.normal = ans_du.cross(ans_dv).unit();
         rst.type = dir.dot(rst.normal) > EPS ? INTO : OUTO;
         rst.normal = rst.normal * (rst.type == OUTO ? 1 : -1);
+        //cout <<dir.dot(rst.normal) <<endl;
         rst.poc = src + dir * rst.t;
         //cout <<rst.poc <<endl;
         rst.hit = this;

@@ -1,5 +1,5 @@
-samp 20
-resl 5
+samp 50
+resl 1
 eye
     pos 50 52 297.4
     dir 0 -0.042612 -1
@@ -190,7 +190,6 @@ Bezier
     absorb .98 .95 .95
     refr 1
     n 1.5
-    emit 12 12 12
 end
 
 # lightbulb
@@ -208,10 +207,10 @@ Bezier
         diff 1
     end
     pos 2 60 40
+    right 1 0 0
     axis 0 1 0
     color .99 .99 .99
     absorb .99 .99 .99
     refr 1
     n 1.5
-    emit 12 12 12
 end
