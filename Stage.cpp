@@ -5,7 +5,9 @@
 #include "Stage.h"
 #include "Object.h"
 #include "Bezier.h"
-#define REFLECT_CNT 4
+#include "Plane.h"
+#include "LimitedObject.h"
+#define REFLECT_CNT 5
 using namespace stage;
 using namespace std;
 
@@ -39,8 +41,16 @@ Stage::Stage(string fname) {
             auto *obj = new AABBox();
             fin >> (*obj);
             objects.push_back(obj);
-        } else if (str == "LimitedPlane") {
-            auto *obj = new LimitedPlane();
+        } else if (str == "Rectangle") {
+            auto *obj = new Rectangle();
+            fin >> (*obj);
+            objects.push_back(obj);
+        } else if (str == "Disk") {
+            auto *obj = new Disk();
+            fin >> (*obj);
+            objects.push_back(obj);
+        } else if (str == "HoledDisk") {
+            auto *obj = new HoledDisk();
             fin >> (*obj);
             objects.push_back(obj);
         } else {
@@ -80,6 +90,8 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
     //    return Vec(0,0,1);
     // return hit -> color;
     // return hit -> color;
+
+    //return hit -> emit;
 
     if (++depth > REFLECT_CNT) return hit->emit;
 
@@ -209,7 +221,6 @@ Ray Camera::get_ray(double x, double y) {
 
 namespace stage {
     std::ostream &operator<<(std::ostream &out, const Stage &stage) {
-        //cout <<*stage.objects[0] <<endl;
         for (Object *obj: stage.objects) {
             out << (*obj) << endl;
         }

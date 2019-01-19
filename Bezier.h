@@ -6,6 +6,7 @@
 #define SCHNERT_BEZIERCURVE_H
 #include "utils.h"
 #include "Object.h"
+#include "Plane.h"
 
 namespace stage {
     class BezierCurve {

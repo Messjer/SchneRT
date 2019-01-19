@@ -11,6 +11,6 @@ endif()
 find_package(PNG REQUIRED)
 include_directories(${PNG_INCLUDE_DIR})
 
-add_executable(SchneRT main.cpp Canvas.cpp Canvas.h utils.h Stage.cpp Stage.h Object.cpp Object.h Bezier.cpp Bezier.h Gauss.cpp Gauss.h)
+add_executable(SchneRT main.cpp Canvas.cpp Canvas.h utils.h Stage.cpp Stage.h Object.cpp Object.h Bezier.cpp Bezier.h Gauss.cpp Gauss.h Plane.cpp Plane.h LimitedObject.cpp LimitedObject.h)
 
 target_link_libraries(SchneRT ${PNG_LIBRARY})

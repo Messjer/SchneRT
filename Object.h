@@ -40,7 +40,7 @@ namespace stage {
     class Object {
     public:
         enum Type {
-            SPHERE, PLANE, BEZIER, BOX, LIMITED_PLANE
+            SPHERE, PLANE, BEZIER, BOX, RECT, DISK, HOLED_DISK
         };
 
         double n;
@@ -81,86 +81,6 @@ namespace stage {
         friend std::istream &operator >>(std::istream &fin, Sphere &s);
 
         friend std::ostream &operator <<(std::ostream &fout, const Sphere &s);
-    };
-
-    class Plane : public Object {
-        // used pos to store vector to the plane from (0,0,0)
-    public:
-        // normalized normal
-        Vec normalized;
-        double dist;
-    public:
-        Plane() {}
-
-        ~Plane() override = default;
-
-        Type get_type() const override { return Object::PLANE; }
-
-        Intersection intersect(const Ray &ray) const override;
-
-        void set(double dist, Vec normalized) {
-            int sign = dist > 0 ? 1 : -1;
-            this->dist = dist * sign; this->normalized = normalized * (-sign);
-            this->pos = normalized * dist;
-        }
-
-        friend std::istream &operator >>(std::istream &fin, Plane &s);
-
-        friend std::ostream &operator <<(std::ostream &fout, const Plane &s);
-
-        friend class AABBox;
-
-        friend class LimitedPlane;
-    };
-
-    class AABBox : public Object {
-    private:
-        // six faces (origin is (0,0,0))
-        Vec low, high;
-        Plane faces[6];
-    public:
-        AABBox(): low(INF_D, INF_D, INF_D), high(-INF_D, -INF_D, -INF_D) {}
-
-        ~AABBox() override = default;
-
-        Type get_type() const override { return Object::BOX; }
-
-        Intersection intersect(const Ray &ray) const override;
-
-        bool contains(const Vec &pt) const;
-
-        void make_faces();
-
-        void transform(const Vec &pos, double scale);
-
-        friend std::istream &operator >>(std::istream &fin, AABBox &s);
-
-        friend std::ostream &operator <<(std::ostream &fout, const AABBox &s);
-
-        friend class BezierRotational;
-    };
-
-    // Planes are recommended to be axis-aligned for displaying textures
-    class LimitedPlane: public Object{
-        Vec low, high, width;
-        Plane plane;
-        double scaled = 0;
-    public:
-        Type get_type() const override { return Object::LIMITED_PLANE; }
-        Intersection intersect(const Ray &ray) const override;
-
-        friend std::istream &operator >>(std::istream &fin, LimitedPlane &s);
-
-        friend std::ostream &operator <<(std::ostream &fout, const LimitedPlane &s);
-
-        bool contains(const Vec &pt) const;
-
-        Vec get_color(const Vec &pt) const override;
-
-        // get offset in dimension d
-        double get_offset(const Vec &pt, int d) const;
-
-        double get_offset_unscaled(const Vec &pt, int d) const;
     };
 }
 

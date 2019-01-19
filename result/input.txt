@@ -1,5 +1,5 @@
 samp 20
-resl 5
+resl 1
 eye
     pos 50 52 297.4
     dir 0 -0.042612 -1
@@ -19,7 +19,7 @@ Sphere
 end
 
 # Right wall (13 square checker)
-LimitedPlane
+Rectangle
     plane
         dist 99
         N 1 0 0
@@ -32,36 +32,6 @@ LimitedPlane
     high 99 81.6 170
 end
 
-# step (main)
-AABB
-    scale 1.2
-    pos 99 0 85
-    low -10 0 0
-    high 0 10 30
-    color .15 .15 .15
-    diff 1
-end
-
-# step
-AABB
-    scale 1.2
-    pos 99 12 85
-    low -5 0 0
-    high 0 5 30
-    color .2 .15 .15
-    diff 1
-end
-
-# step
-AABB
-    scale 1.2
-    pos 87 0 85
-    low -5 0 0
-    high 0 5 30
-    color .1 .15 .15
-    diff 1
-end
-
 # Back wall
 Plane
     dist 0
@@ -71,7 +41,7 @@ Plane
 end
 
 # Middle-front wall
-LimitedPlane
+Rectangle
     plane
         dist 85
         N 0 0 1
@@ -117,7 +87,7 @@ Sphere
 end
 
 # Light left
-LimitedPlane
+Rectangle
     plane
         dist -7
         N 1 0 0
@@ -146,79 +116,116 @@ Sphere
     diff 1
 end
 
-# cross (vertical)
-AABB
-    scale 1.2
-    pos 65 56.9 116
-    low -1 -5 -1
-    high 1 5 1
-    color .6 .6 .6
-    spec 1
-end
-
-# cross (horizontal)
-AABB
-    scale 1.2
-    pos 70.6 56.9 116
-    low -10 -1 -1
-    high 3 1 1
-    color .6 .6 .6
-    spec 1
-end
-
-# Pillar
-AABB
-    scale 3
-    pos 2 0 40
-    low -1 0 -1
-    high 1 20 1
-    color .1 .1 .1
-    diff 1
-end
-
-# Chess (right) (manually entered AABB to speed up)
-Bezier
-    order 5
-    controls
-    0 0 0
-    0.12 3.58 0
-    -1.27 -3.4 0
-    -3.52 2.45 0
-    -3.5 0 0
-    scale 7.4
-    right 0 1 0
-    AABB
-        pos 99 57 116
-        low -3.5 -.9 -.9
-        high 0 .9 .9
-        diff 1
-        color 0 0 .75
+# Disk (/)
+HoledDisk
+    plane
+        dist -60
+        N -0.707037 0.707176 0
+        color .99 .6 .6
+        spec 1
     end
-    pos 99 57 116
-    axis -1 0 0
-    color .8 .4 .4
-    absorb .98 .95 .95
-    refr 1
-    n 1.5
-end
-
-# lightbulb
-Bezier
-    order 3
-    controls
-    0 0 0
-    3.4 1.27 0
-    0 3.5 0
-    scale 5
-    AABB
-        pos 2 60 40
-        low -1.8 0 -1.8
-        high 1.8 3.50 1.8
-        diff 1
-    end
-    pos 2 60 40
-    right 1 0 0
     axis 0 1 0
+    theta 0.7853
+    pos 70 0 70
+    rad_in 10
+    rad_out 14
+end
+
+# Disk (\)
+HoledDisk
+    plane
+        dist -1
+        N 0.686229 0.727385 0
+        color .6 .99 .6
+        spec 1
+    end
+    axis -1 0 0
+    theta 0.8
+    pos 46 34 99.9975
+    rad_in 15
+    rad_out 17
+end
+
+## cross (vertical)
+#AABB
+#    scale 1.2
+#    pos 65 56.9 116
+#    low -1 -5 -1
+#    high 1 5 1
+#    color .6 .6 .6
+#    spec 1
+#end
+#
+## cross (horizontal)
+#AABB
+#    scale 1.2
+#    pos 70.6 56.9 116
+#    low -10 -1 -1
+#    high 3 1 1
+#    color .6 .6 .6
+#    spec 1
+#end
+#
+## Chess (right) (manually entered AABB to speed up)
+#Bezier
+#    order 5
+#    controls
+#    0 0 0
+#    0.12 3.58 0
+#    -1.27 -3.4 0
+#    -3.52 2.45 0
+#    -3.5 0 0
+#    scale 7.4
+#    right 0 1 0
+#    AABB
+#        pos 99 57 116
+#        low -3.5 -.9 -.9
+#        high 0 .9 .9
+#        diff 1
+#        color 0 0 .75
+#    end
+#    pos 99 57 116
+#    axis -1 0 0
+#    color .8 .4 .4
+#    absorb .98 .95 .95
+#    refr 1
+#    n 1.5
+#end
+#
+## lightbulb
+Sphere
+    rad 57
+    pos 2 68 40
     color 1 1 1
     spec 1
 end
+
+## step (main)
+#AABB
+#    scale 1.2
+#    pos 99 0 85
+#    low -10 0 0
+#    high 0 10 30
+#    color .15 .15 .15
+#    diff 1
+#end
+#
+## step
+#AABB
+#    scale 1.2
+#    pos 99 12 85
+#    low -5 0 0
+#    high 0 5 30
+#    color .2 .15 .15
+#    diff 1
+#end
+#
+## step
+#AABB
+#    scale 1.2
+#    pos 87 0 85
+#    low -5 0 0
+#    high 0 5 30
+#    color .1 .15 .15
+#    diff 1
+#end
