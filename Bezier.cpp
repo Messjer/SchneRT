@@ -5,8 +5,8 @@
 #include "Bezier.h"
 #include "Gauss.h"
 // ITER = 6 and ATTEMPT = 12 is good
-#define NEWTON_ITER 5
-#define NEWTON_ATTEMPT 10
+#define NEWTON_ITER 10
+#define NEWTON_ATTEMPT 15
 #define NEWTON_DELTA 5e-5
 
 using namespace std;
@@ -115,7 +115,7 @@ Intersection BezierRotational::intersect(const Ray &ray, bool with_BB) const {
         if (v0 > 1) v0 = v0 - 1;
         if (v0 < EPS) v0 = v0 + 1;
         X = Vec(with_box.t, drand48(), v0);
-        int cnt = 0, found_cnt = 0; // number of increasing distance
+        int found_cnt = 0; // number of increasing distance
         double last_dist = INF_D;
 
         for (int i = 0; i < NEWTON_ITER; i++) {
@@ -128,20 +128,9 @@ Intersection BezierRotational::intersect(const Ray &ray, bool with_BB) const {
             Vec d_x = Gauss::solve(dir * (-1) , du, dv, f);
             X = X + d_x;
             double dist = f.inf_norm();
-            if (last_dist < dist) {
-                cnt++;
-                if (cnt >= 2) {
-                    //cout <<"killed " << i <<endl;
-                    break;
-                }
-            } else cnt = 0;
             double t = X[0];
-            if (t < EPS && X[1] > EPS && X[2] > EPS && X[1] < 1 - EPS && X[2] < 1 - EPS
-                              && ((last_dist = dist) < NEWTON_DELTA)){
-                X[0] = -X[0];
-                X[2] = 1 - X[2];
-                continue;
-            }
+            if (t < -.3 || X[1] > 1.3 || X[1] < -.3 || X[2] > 1.3 || X[1] < -.3)
+                break;
             if (t > EPS && X[1] > EPS && X[2] > EPS && X[1] < 1 - EPS && X[2] < 1 - EPS
                 && ((last_dist = dist) < NEWTON_DELTA)) {
                 found_cnt++;
