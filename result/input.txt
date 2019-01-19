@@ -1,5 +1,5 @@
 samp 20
-resl 1
+resl 10
 eye
     pos 50 52 297.4
     dir 0 -0.042612 -1
@@ -114,6 +114,14 @@ Sphere
     absorb .9 .98 1
     refr 1
     n 1.5
+end
+
+# Glass ball light
+Sphere
+    rad 1
+    pos 50 8 100
+    emit .8 .8 .8
+    diff 1
 end
 
 # Light back

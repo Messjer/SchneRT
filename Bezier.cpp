@@ -104,7 +104,6 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
 
     // t, u, v respectively
     Vec src = ray.src, dir = ray.dir;
-    int qq = -1;
     for (int q = 0; q < NEWTON_ATTEMPT; q++) {
         Vec du, dv, f;
 
@@ -145,14 +144,12 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
                 && ((last_dist = dist) < NEWTON_DELTA)) {
                 found_cnt++;
                 if (t < ans_t) {
-                    //cout <<t <<endl;
                     Vec p = eval(X[1], X[2]);
                     du = this->du(X[1], X[2]);
                     dv = this->dv(p);
                     ans_t = t;
                     ans_du = du;
                     ans_dv = dv;
-                    qq = q;
                 }
                 break;
             }
@@ -162,15 +159,11 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
     }
 
     if (ans_t < INF_D ) {
-        //cout <<qq <<endl;
         rst.t = ans_t;
-        //cout <<rst.t <<endl;
         rst.normal = ans_du.cross(ans_dv).unit();
         rst.type = dir.dot(rst.normal) > EPS ? INTO : OUTO;
         rst.normal = rst.normal * (rst.type == OUTO ? 1 : -1);
-        //cout <<dir.dot(rst.normal) <<endl;
         rst.poc = src + dir * rst.t;
-        //cout <<rst.poc <<endl;
         rst.hit = this;
         return rst;
     }
