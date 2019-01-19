@@ -69,16 +69,24 @@ Stage::~Stage() {
 }
 
 Intersection Stage::intersect(const Ray &ray) {
-    Intersection rst;
+    // the following speed up require Bezier to be last
+    Intersection rst, last;
     for (int i = 0; i < objects.size(); i++) {
         Intersection tmp = objects[i]->intersect(ray, true);
         if (tmp.type != MISS && tmp.t < rst.t) {
+            last = rst;
             rst = tmp;
         }
     }
     // try to speed up
-    if (rst.hit -> get_type() == Object::BEZIER)
-        rst = rst.hit -> intersect(ray, false);
+    if (rst.hit -> get_type() == Object::BOX) {
+        auto box = (AABBox *) rst.hit;
+        if (box -> enclosed != nullptr) {
+            rst = (box -> enclosed) -> intersect(ray, false);
+            if (rst.type == MISS)
+                return last;
+        }
+    }
     return rst;
 }
 

@@ -43,6 +43,8 @@ namespace stage {
         Vec low, high;
         Plane faces[6];
     public:
+        Object *enclosed = nullptr;
+
         AABBox(): low(INF_D, INF_D, INF_D), high(-INF_D, -INF_D, -INF_D) {}
 
         ~AABBox() override = default;
@@ -54,6 +56,8 @@ namespace stage {
         bool contains(const Vec &pt) const;
 
         void make_faces();
+
+        void set_enclosed(Object *ptr) { enclosed = ptr; }
 
         void transform(const Vec &pos, double scale);
 

@@ -92,7 +92,7 @@ double BezierRotational::compute_angle(const Vec &pt) const {
 Intersection BezierRotational::intersect(const Ray &ray, bool with_BB) const {
     Intersection rst;
 
-    Intersection with_box = b_box.intersect(ray, false);
+    Intersection with_box = b_box.intersect(ray, true);
 
     if (with_BB) return with_box;
 
@@ -221,6 +221,7 @@ namespace stage {
         else {
             b.b_box.transform(b.pos, scale);
         }
+        b.b_box.set_enclosed(&b);
         return fin;
     }
 

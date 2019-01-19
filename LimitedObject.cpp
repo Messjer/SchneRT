@@ -94,11 +94,9 @@ namespace stage {
             }
         }
         if (theta >= EPS) {
-            //cout <<s.plane.dist <<endl;
             s.plane.set(s.plane.dist, s.plane.normalized.rotate(axis, theta));
         }
         double yy = s.pos.dot(s.plane.normalized) + s.plane.dist;
-        cout <<yy <<endl;
         s.pos = s.pos - s.plane.normalized * yy;
         s.diff = s.plane.diff;
         s.refr = s.plane.refr;
