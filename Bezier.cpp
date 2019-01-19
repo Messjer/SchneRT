@@ -193,6 +193,7 @@ namespace stage {
             else if (str == "scale") fin >> scale;
             else if (str == "spec") fin >> b.spec;
             else if (str == "right") fin >> b.right;
+            else if (str == "absorb") fin >> b.absorb;
             else if (str == "refr") fin >> b.refr;
             else if (str == "color") fin >> b.color;
             else if (str == "axis") fin >> b.axis;

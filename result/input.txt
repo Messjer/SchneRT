@@ -1,5 +1,5 @@
-samp 20
-resl 1
+samp 5
+resl 10
 eye
     pos 50 52 297.4
     dir 0 -0.042612 -1
@@ -113,7 +113,7 @@ Bezier
     -1.27 -3.4 0
     -3.52 2.45 0
     -3.5 0 0
-    scale 3
+    scale 6
     right 0 1 0
     AABB
         pos 99 57 116
@@ -125,7 +125,7 @@ Bezier
     pos 99 57 116
     axis -1 0 0
     color .8 .4 .4
-    absorb 1 1 1
+    absorb .98 .95 .95
     refr 1
     n 1.5
 end
