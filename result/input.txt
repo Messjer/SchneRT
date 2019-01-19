@@ -1,4 +1,4 @@
-samp 50
+samp 20
 resl 1
 eye
     pos 50 52 297.4
@@ -134,63 +134,63 @@ Sphere
     diff 1
 end
 
-
-
-# cross (vertical)
-AABB
-    scale 1.2
-    pos 65 56.7 116
-    low -1 -5 -1
-    high 1 5 1
-    color .6 .6 .6
-    spec 1
-end
-
-# cross (horizontal)
-AABB
-    scale 1.2
-    pos 70.6 56.7 116
-    low -10 -1 -1
-    high 3 1 1
-    color .6 .6 .6
-    spec 1
-end
-
-# Pillar
-AABB
-    scale 3
-    pos 2 0 40
-    low -1 0 -1
-    high 1 20 1
-    color .1 .1 .1
-    diff 1
-end
-
-# Chess (right) (manually entered AABB to speed up)
-Bezier
-    order 5
-    controls
-    0 0 0
-    0.12 3.58 0
-    -1.27 -3.4 0
-    -3.52 2.45 0
-    -3.5 0 0
-    scale 6
-    right 0 1 0
-    AABB
-        pos 99 57 116
-        low -3.5 -.9 -.9
-        high 0 .9 .9
-        diff 1
-        color 0 0 .75
-    end
-    pos 99 57 116
-    axis -1 0 0
-    color .8 .4 .4
-    absorb .98 .95 .95
-    refr 1
-    n 1.5
-end
+#
+#
+## cross (vertical)
+#AABB
+#    scale 1.2
+#    pos 65 56.7 116
+#    low -1 -5 -1
+#    high 1 5 1
+#    color .6 .6 .6
+#    spec 1
+#end
+#
+## cross (horizontal)
+#AABB
+#    scale 1.2
+#    pos 70.6 56.7 116
+#    low -10 -1 -1
+#    high 3 1 1
+#    color .6 .6 .6
+#    spec 1
+#end
+#
+## Pillar
+#AABB
+#    scale 3
+#    pos 2 0 40
+#    low -1 0 -1
+#    high 1 20 1
+#    color .1 .1 .1
+#    diff 1
+#end
+#
+## Chess (right) (manually entered AABB to speed up)
+#Bezier
+#    order 5
+#    controls
+#    0 0 0
+#    0.12 3.58 0
+#    -1.27 -3.4 0
+#    -3.52 2.45 0
+#    -3.5 0 0
+#    scale 6
+#    right 0 1 0
+#    AABB
+#        pos 99 57 116
+#        low -3.5 -.9 -.9
+#        high 0 .9 .9
+#        diff 1
+#        color 0 0 .75
+#    end
+#    pos 99 57 116
+#    axis -1 0 0
+#    color .8 .4 .4
+#    absorb .98 .95 .95
+#    refr 1
+#    n 1.5
+#end
 
 # lightbulb
 Bezier
