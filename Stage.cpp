@@ -5,7 +5,7 @@
 #include "Stage.h"
 #include "Object.h"
 #include "Bezier.h"
-#define REFLECT_CNT 5
+#define REFLECT_CNT 2
 using namespace stage;
 using namespace std;
 
@@ -113,15 +113,15 @@ Vec Stage::radiance(const Ray &ray, int depth, unsigned short *Xi) {
         double a = nt - nc, b = nt + nc, R0 = a * a / (b * b), c = 1 - (into ? -ddn : tdir.dot(normal_orig));
         double Re = R0 + (1 - R0) * c * c * c * c * c, Tr = 1 - Re, P = .25 + .5 * Re, RP = Re / P, TP = Tr / (1 - P);
         Vec to_add = hit_color;
-        Vec alpha = {1,1,1};
+        Vec alpha = to_add;
         if (!into)
             alpha = hit->absorb.exp(intersection.t);
         if (depth < 2)
-            to_add = to_add * radiance(reflect, depth, Xi) * Re + radiance(trans, depth, Xi) * Tr * alpha;
+            to_add = (radiance(reflect, depth, Xi) * Re * to_add + radiance(trans, depth, Xi) * Tr * alpha);
         else if (erand48(Xi) < P)
             to_add = to_add * radiance(reflect, depth, Xi) * RP;
         else
-            to_add = to_add * radiance(trans, depth, Xi) * TP * alpha;
+            to_add = radiance(trans, depth, Xi) * TP * alpha;
         color = color + to_add;
     }
 

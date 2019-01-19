@@ -230,7 +230,7 @@ Intersection Plane::intersect(const Ray &ray) const {
     {
         double sgn = dot > EPS ? -1 : 1;
         rst.t = t;
-        rst.type = OUTO;
+        rst.type = INTO;
         rst.poc = ray.src + ray.dir * t;
         rst.normal = normalized * sgn;
         rst.hit = this;

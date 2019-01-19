@@ -21,6 +21,7 @@ namespace stage {
 
     class BezierRotational : public Object {
     private:
+        int Q;
         int order;
         Vec axis, right, up;
         AABBox b_box;

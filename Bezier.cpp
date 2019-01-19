@@ -104,18 +104,17 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
 
     // t, u, v respectively
     Vec src = ray.src, dir = ray.dir;
-    bool found = false;
+    int qq = -1;
     for (int q = 0; q < NEWTON_ATTEMPT; q++) {
         Vec du, dv, f;
 
         // first guess
-        double v0 = compute_angle(with_box.poc) + (drand48() - .5) * .2;
+        double v0 = compute_angle(with_box.poc) + (drand48() - .5) * .05;
         //double v0 = drand48();
         if (v0 > 1) v0 = v0 - 1;
         if (v0 < EPS) v0 = v0 + 1;
-        //double v0 = drand48();
         X = Vec(with_box.t, drand48(), v0);
-        int cnt = 0; // number of increasing distance
+        int cnt = 0, found_cnt = 0; // number of increasing distance
         double last_dist = INF_D;
 
         for (int i = 0; i < NEWTON_ITER; i++) {
@@ -135,26 +134,37 @@ Intersection BezierRotational::intersect(const Ray &ray) const {
                     break;
                 }
             } else cnt = 0;
-            if (X[0] > EPS && X[1] > EPS && X[2] > EPS && X[1] < 1 - EPS && X[2] < 1 - EPS
+            double t = X[0];
+            if (t < EPS && X[1] > EPS && X[2] > EPS && X[1] < 1 - EPS && X[2] < 1 - EPS
+                              && ((last_dist = dist) < NEWTON_DELTA)){
+                X[0] = -X[0];
+                X[2] = 1 - X[2];
+                continue;
+            }
+            if (t > EPS && X[1] > EPS && X[2] > EPS && X[1] < 1 - EPS && X[2] < 1 - EPS
                 && ((last_dist = dist) < NEWTON_DELTA)) {
-                found = true;
+                found_cnt++;
+                if (t < ans_t) {
+                    //cout <<t <<endl;
+                    Vec p = eval(X[1], X[2]);
+                    du = this->du(X[1], X[2]);
+                    dv = this->dv(p);
+                    ans_t = t;
+                    ans_du = du;
+                    ans_dv = dv;
+                    qq = q;
+                }
                 break;
             }
         }
-        double t = X[0];
-        if (found && t < ans_t) {
-            //cout <<t <<endl;
-            Vec p = eval(X[1], X[2]);
-            du = this->du(X[1], X[2]);
-            dv = this->dv(p);
-            ans_t = t;
-            ans_du = du;
-            ans_dv = dv;
-        }
+        if (found_cnt >= 3)
+            break;
     }
 
     if (ans_t < INF_D ) {
+        //cout <<qq <<endl;
         rst.t = ans_t;
+        //cout <<rst.t <<endl;
         rst.normal = ans_du.cross(ans_dv).unit();
         rst.type = dir.dot(rst.normal) > EPS ? INTO : OUTO;
         rst.normal = rst.normal * (rst.type == OUTO ? 1 : -1);
