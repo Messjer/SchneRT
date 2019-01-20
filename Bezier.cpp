@@ -115,7 +115,6 @@ Intersection BezierRotational::intersect(const Ray &ray, bool with_BB) const {
         if (v0 > 1) v0 = v0 - 1;
         if (v0 < EPS) v0 = v0 + 1;
         X = Vec(with_box.t, drand48(), v0);
-        int found_cnt = 0; // number of increasing distance
         double last_dist = INF_D;
 
         for (int i = 0; i < NEWTON_ITER; i++) {
@@ -129,11 +128,8 @@ Intersection BezierRotational::intersect(const Ray &ray, bool with_BB) const {
             X = X + d_x;
             double dist = f.inf_norm();
             double t = X[0];
-            if (t < -.3 || X[1] > 1.3 || X[1] < -.3 || X[2] > 1.3 || X[1] < -.3)
-                break;
             if (t > EPS && X[1] > EPS && X[2] > EPS && X[1] < 1 - EPS && X[2] < 1 - EPS
                 && ((last_dist = dist) < NEWTON_DELTA)) {
-                found_cnt++;
                 if (t < ans_t) {
                     Vec p = eval(X[1], X[2]);
                     du = this->du(X[1], X[2]);
@@ -145,8 +141,6 @@ Intersection BezierRotational::intersect(const Ray &ray, bool with_BB) const {
                 break;
             }
         }
-        if (found_cnt >= 3)
-            break;
     }
 
     if (ans_t < INF_D ) {
