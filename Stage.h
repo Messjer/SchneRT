@@ -25,7 +25,8 @@ namespace stage {
     };
 
     class Stage {
-        int samp, resl;
+        int samp;
+        double resl;
     public:;
         Stage(std::string description);
         ~Stage();
