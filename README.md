@@ -2,6 +2,8 @@ SCHNEll Ray Tracer
 ------------------
 Ray Tracer project for THU Course `Advanced Computer Graphics`
 
+![alt text](result/)
+
 ## Features
 - Monte Carlo Path Tracing
     - Specular Reflection
