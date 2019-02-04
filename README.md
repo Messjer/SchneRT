@@ -2,7 +2,7 @@ SCHNEll Ray Tracer
 ------------------
 Ray Tracer project for THU Course `Advanced Computer Graphics`
 
-![alt text](result/)
+![alt text](result/pic_ser.png)
 
 ## Features
 - Monte Carlo Path Tracing
