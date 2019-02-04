@@ -4,9 +4,9 @@ Ray Tracer project for THU Course `Advanced Computer Graphics`
 
 ![Tell Your Ghost to Dance](result/pic_ser.png)
 
-<p align="center"><i>劇院休息室的幻影</i>
+<p align="center"><i>劇院休息室的幻影</i></p>
 
-<i>Tell Your Ghost to Dance</i></p>
+<p align="center"><i>(Tell Your Ghost to Dance)</i></p>
 
 ## Features
 - Monte Carlo Path Tracing
