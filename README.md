@@ -2,7 +2,10 @@ SCHNEll Ray Tracer
 ------------------
 Ray Tracer project for THU Course `Advanced Computer Graphics`
 
-![alt text](result/pic_ser.png)
+![Tell Your Ghost to Dance](result/pic_ser.png)
+
+<i>劇院休息室的幻影</i>
+<i>Tell Your Ghost to Dance</i>
 
 ## Features
 - Monte Carlo Path Tracing
